@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories - Admin</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+
+        /* Shared Container Styles */
+        .content-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .page-title { margin-bottom: 0; font-weight: bold; color: #2b2320; }
+        .section-title { font-size: 1.1rem; font-weight: 700; color: #555; margin-bottom: 15px; }
+        .btn-action { margin-right: 5px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="page-title">Manage Categories</h2>
+            <a href="{% url 'admin_home' %}" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="content-card">
+            <h5 class="section-title"><i class="fas fa-plus-circle me-2"></i>Add New Category</h5>
+            <p class="text-muted small mb-3">Create new material types or service categories (e.g., "FDM Printing", "Resin SLA", "Nylon Sintering") for shops to select.</p>
+
+            <form method="POST" action="" class="row g-3 align-items-end">
+                {% csrf_token %}
+                <div class="col-md-9">
+                    <label for="categoryName" class="form-label fw-bold small text-uppercase">Category Name</label>
+                    <input type="text" class="form-control" id="categoryName" name="category_name" placeholder="Enter category name..." required>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100 fw-bold" style="background-color: #f03c02; border-color: #f03c02;">
+                        <i class="fas fa-save me-1"></i> Save Category
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="content-card">
+            <h5 class="section-title"><i class="fas fa-list me-2"></i>Existing Categories</h5>
+
+            <table class="table table-hover table-bordered align-middle mt-3">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 10%;">ID</th>
+                        <th>Category Name</th>
+                        <th style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in categories %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>
+                            <strong>{{ category.category_name }}</strong>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete_category' category.id %}" class="btn btn-danger btn-sm btn-action" onclick="return confirm('Are you sure you want to delete &quot;{{ category.category_name }}&quot;?');">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">
+                            No categories found. Add one above.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

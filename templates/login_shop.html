@@ -1,0 +1,95 @@
+{% load static %}
+{% include 'header.html' %}
+
+<style>
+  .login-form-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    background: rgba(255,255,255,0.97);
+    padding: 30px 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(51,51,51,0.12);
+    transform: translate(-50%, -50%);
+    z-index: 20;
+  }
+  .login-form-overlay h1 {
+    font-size: 1.6rem;
+    color: #ff6600;
+    margin-bottom: 18px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+  .shop-form-btn {
+    background: linear-gradient(90deg,#ff6600,#ff9800);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    width: 100%;
+    border-radius: 4px;
+    margin-top: 10px;
+    transition: background 0.2s;
+  }
+  .shop-form-btn:hover {
+    background: #ff9800;
+    color: #222;
+  }
+  .form-links {
+    text-align: center;
+    margin-top: 18px;
+  }
+  .form-links a {
+    text-decoration: none;
+    color: #ff6600;
+    font-weight: 500;
+    transition: text-decoration 0.15s, color 0.2s;
+  }
+  .form-links a:hover, .form-links a:focus {
+    text-decoration: underline;
+    color: #d35400;
+  }
+  .register-shop-link {
+    display: inline-block;
+    margin-top: 10px;
+  }
+</style>
+
+<section id="hero" class="hero section dark-background" style="position:relative;">
+  <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-item active">
+      <img src="{% static 'assets/img/hero-carousel/hero-carousel-1.jpg' %}" alt="" style="height: 420px; object-fit: cover; width:100%;">
+      <div class="login-form-overlay">
+        <h1>Shop Login</h1>
+        <form method="post">
+          {% csrf_token %}
+          <input type="text" name="username" class="form-control mb-2" placeholder="Shop Username" required>
+          <input type="password" name="password" class="form-control mb-2" placeholder="Password" required>
+          <button type="submit" class="shop-form-btn">Login</button>
+        </form>
+        <div class="form-links">
+          <a href="#">Forgot Username/Password?</a>
+          <br>
+          <a href="{% url 'register_shop' %}" class="register-shop-link">Register as Shop</a>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'assets/img/hero-carousel/hero-carousel-2.jpg' %}" alt="" style="height: 420px; object-fit: cover; width:100%;">
+      <div></div>
+    </div>
+    <div class="carousel-item">
+      <img src="{% static 'assets/img/hero-carousel/hero-carousel-3.jpg' %}" alt="" style="height: 420px; object-fit: cover; width:100%;">
+      <div></div>
+    </div>
+    <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+    </a>
+    <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+      <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+    </a>
+    <ol class="carousel-indicators"></ol>
+  </div>
+</section>
+{% include 'footer.html' %}

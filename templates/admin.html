@@ -1,0 +1,794 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Action Center - PrintVerse</title>
+{#    <script src="https://cdn.tailwindcss.com"></script>#}
+    <script src="{% static 'assets/js/tailwind.js' %}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {brand: {orange: '#f03c02', dark: '#2b2320'}},
+                    fontFamily: {sans: ['Roboto', 'sans-serif']}
+                }
+            }
+        }
+    </script>
+    <style>
+        .sidebar-transition {
+            transition: width 0.3s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Timeline styling */
+        .timeline-item {
+            border-left: 2px solid #e5e7eb;
+            padding-left: 1.5rem;
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -0.4rem;
+            top: 0.25rem;
+            width: 0.8rem;
+            height: 0.8rem;
+            background: #fff;
+            border: 2px solid #f03c02;
+            border-radius: 50%;
+        }
+
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800 h-screen flex overflow-hidden">
+
+<aside id="sidebar"
+       class="bg-brand-dark text-white w-64 flex-shrink-0 flex flex-col transition-all duration-300 z-20 shadow-xl">
+    <div class="h-16 flex items-center justify-between px-4 border-b border-gray-700 bg-black bg-opacity-20">
+        <div class="flex items-center space-x-2 overflow-hidden whitespace-nowrap" id="logo-container">
+            <span class="text-brand-orange text-2xl font-bold">Print</span><span class="text-xl font-bold">Verse</span>
+        </div>
+        <button onclick="toggleSidebar()" class="text-gray-400 hover:text-white focus:outline-none">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto py-4 no-scrollbar">
+        <ul class="space-y-1">
+            <li><a href="#" onclick="switchTab('dashboard', this)"
+                   class="menu-item active flex items-center px-4 py-3 bg-brand-orange text-white border-r-4 border-white">
+                <i class="fas fa-bolt w-6 text-center"></i><span class="ml-3 font-medium">Action Center</span>
+            </a></li>
+
+            <li class="px-4 pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider">Management</li>
+            <li><a href="{% url 'registered_shops' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-store w-6 text-center"></i><span class="ml-3">Registered Shops</span>
+            </a></li>
+
+            <li><a href="{% url 'approved_shops' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-check-circle w-6 text-center"></i><span class="ml-3">Approved Shops</span>
+            </a></li>
+
+            <li><a href="{% url 'registered_users' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-users w-6 text-center"></i><span class="ml-3">Registered Users</span>
+            </a></li>
+
+            <li><a href="{% url 'manage_category' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-tags w-6 text-center"></i><span class="ml-3">Manage Category</span>
+            </a></li>
+
+            <li class="px-4 pt-4 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider">Support & Ops</li>
+
+            <li><a href="{% url 'view_complaint' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-exclamation-triangle w-6 text-center"></i><span class="ml-3">View Complaints</span>
+            </a></li>
+
+            <li><a href="{% url 'view_feedback' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-comments w-6 text-center"></i><span class="ml-3">View Feedback</span>
+            </a></li>
+
+            <li><a href="{% url 'view_requests' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-clipboard-list w-6 text-center"></i><span class="ml-3">View Requests</span>
+            </a></li>
+
+{#            <li><a href="#" onclick="switchTab('payments', this)"#}
+{#                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">#}
+{#                <i class="fas fa-money-check-alt w-6 text-center"></i><span class="ml-3">Payments</span>#}
+{#            </a></li>#}
+
+            <li><a href="{% url 'view_orders' %}"
+                   class="menu-item flex items-center px-4 py-2 hover:bg-gray-700 text-gray-300 border-r-4 border-transparent hover:border-brand-orange transition-all">
+                <i class="fas fa-box w-6 text-center"></i><span class="ml-3">Orders</span>
+            </a></li>
+        </ul>
+    </nav>
+    <div class="p-4 border-t border-gray-700 bg-black bg-opacity-20">
+        <a href="{% url 'logout' %}" class="flex items-center text-red-400 hover:text-red-300 transition-colors">
+            <i class="fas fa-sign-out-alt w-6 text-center"></i><span class="ml-3 font-medium">Logout</span>
+        </a>
+    </div>
+</aside>
+
+<div class="flex-1 flex flex-col overflow-hidden">
+    <header class="h-16 bg-white shadow-sm flex items-center justify-between px-8 z-10 border-b">
+        <div>
+            <h2 id="page-title" class="text-xl font-bold text-gray-800">Action Center</h2>
+            <p id="page-subtitle" class="text-xs text-gray-500">Welcome back, Administrator.</p>
+        </div>
+        <div class="flex items-center space-x-4">
+            <div class="flex items-center gap-2 bg-green-50 px-3 py-1 rounded-full border border-green-100">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-xs font-bold text-green-700">System Operational</span>
+            </div>
+            <div class="h-8 w-px bg-gray-200 mx-2"></div>
+            <div class="flex items-center space-x-3">
+                <div class="text-right hidden sm:block">
+                    <div class="text-sm font-bold text-gray-900">Admin User</div>
+                    <div class="text-xs text-gray-500">Super Admin</div>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Admin&background=f03c02&color=fff&bold=true"
+                     class="h-10 w-10 rounded-full border-2 border-white shadow-sm">
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto p-8 relative">
+
+
+
+        <div id="view-dashboard" class="content-view fade-in">
+
+            <h3 class="text-lg font-bold text-gray-700 mb-4 flex items-center">
+                <i class="fas fa-bell text-brand-orange mr-2"></i> Attention Needed
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-orange-100 relative overflow-hidden group hover:shadow-md transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-store text-6xl text-brand-orange"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-orange-100 text-orange-800 text-xs font-bold px-2 py-1 rounded uppercase">Verification</span>
+                            <span class="text-gray-400 text-xs">Live Data</span>
+                        </div>
+                        <h4 class="text-3xl font-black text-gray-800 mb-1">{{ pending_shops_count }}</h4>
+                        <p class="text-sm text-gray-600 font-medium mb-4">Pending Shop Applications</p>
+                        <a href="{% url 'registered_shops' %}"
+                           class="block w-full text-center bg-white border border-gray-300 text-gray-700 hover:bg-brand-orange hover:text-white hover:border-brand-orange py-2 rounded-lg text-sm font-bold transition-colors">
+                            Review Applications
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-red-100 relative overflow-hidden group hover:shadow-md transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-exclamation-circle text-6xl text-red-600"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded uppercase">Support</span>
+                            <span class="text-gray-400 text-xs">High Priority</span>
+                        </div>
+                        <h4 class="text-3xl font-black text-gray-800 mb-1">{{ unresolved_complaints_count }}</h4>
+                        <p class="text-sm text-gray-600 font-medium mb-4">Unresolved Complaints</p>
+                        <a href="{% url 'view_complaint' %}"
+                           class="block w-full text-center bg-white border border-gray-300 text-gray-700 hover:bg-red-600 hover:text-white hover:border-red-600 py-2 rounded-lg text-sm font-bold transition-colors">
+                            Resolve Issues
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-blue-100 relative overflow-hidden group hover:shadow-md transition-all">
+                    <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i class="fas fa-file-import text-6xl text-blue-600"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2 py-1 rounded uppercase">Jobs</span>
+                            <span class="text-gray-400 text-xs">Live Data</span>
+                        </div>
+                        <h4 class="text-3xl font-black text-gray-800 mb-1">{{ pending_requests_count }}</h4>
+                        <p class="text-sm text-gray-600 font-medium mb-4">Pending Print Requests</p>
+                        <a href="{% url 'view_requests' %}"
+                           class="block text-center w-full bg-white border border-gray-300 text-gray-700 hover:bg-blue-600 hover:text-white hover:border-blue-600 py-2 rounded-lg text-sm font-bold transition-colors">
+                            View Requests
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div id="view-verify-shops" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">Review
+                    Applications</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Shop Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Owner</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Proof</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Quick Fix</td>
+                        <td class="px-6 py-4">Mike R.</td>
+                        <td class="px-6 py-4 text-blue-600 cursor-pointer hover:underline"><i
+                                class="fas fa-file-pdf mr-1"></i> doc_1.pdf
+                        </td>
+                        <td class="px-6 py-4 space-x-2">
+                            <button onclick="openModal('modal-approve')"
+                                    class="text-green-600 hover:text-green-800 bg-green-50 px-2 py-1 rounded"><i
+                                    class="fas fa-check"></i> Approve
+                            </button>
+                            <button onclick="openModal('modal-reject')"
+                                    class="text-red-600 hover:text-red-800 bg-red-50 px-2 py-1 rounded"><i
+                                    class="fas fa-times"></i> Reject
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Art House</td>
+                        <td class="px-6 py-4">Sarah Art</td>
+                        <td class="px-6 py-4 text-blue-600 cursor-pointer hover:underline"><i
+                                class="fas fa-file-image mr-1"></i> doc_2.jpg
+                        </td>
+                        <td class="px-6 py-4 space-x-2">
+                            <button onclick="openModal('modal-approve')"
+                                    class="text-green-600 hover:text-green-800 bg-green-50 px-2 py-1 rounded"><i
+                                    class="fas fa-check"></i> Approve
+                            </button>
+                            <button onclick="openModal('modal-reject')"
+                                    class="text-red-600 hover:text-red-800 bg-red-50 px-2 py-1 rounded"><i
+                                    class="fas fa-times"></i> Reject
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-approved-shops" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">Active
+                    Partners</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Shop Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Category</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 text-xs">SH-101</td>
+                        <td class="px-6 py-4 font-bold">Maker Studio</td>
+                        <td class="px-6 py-4">FDM</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-block')"
+                                    class="text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50 text-xs">
+                                Block Access
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 text-xs">SH-102</td>
+                        <td class="px-6 py-4 font-bold">Resin Pro</td>
+                        <td class="px-6 py-4">SLA</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-block')"
+                                    class="text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50 text-xs">
+                                Block Access
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-users" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50 flex justify-between"><h3
+                        class="font-bold text-gray-800">User Directory</h3> <input type="text" placeholder="Search..."
+                                                                                   class="text-xs border rounded p-1">
+                </div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Role</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Alex Doe</td>
+                        <td class="px-6 py-4 text-sm">alex@test.com</td>
+                        <td class="px-6 py-4 text-sm">Hobbyist</td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-block')"
+                                    class="text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50 text-xs">
+                                Block
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Sam Smith</td>
+                        <td class="px-6 py-4 text-sm">sam@test.com</td>
+                        <td class="px-6 py-4 text-sm">Buyer</td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-block')"
+                                    class="text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50 text-xs">
+                                Block
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Tech Corp</td>
+                        <td class="px-6 py-4 text-sm">admin@tech.com</td>
+                        <td class="px-6 py-4 text-sm">Business</td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-block')"
+                                    class="text-red-500 border border-red-200 px-2 py-1 rounded hover:bg-red-50 text-xs">
+                                Block
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-categories" class="content-view hidden fade-in">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-gray-800">Materials & Categories</h3>
+                <button onclick="alert('Add Category Modal')"
+                        class="bg-brand-dark text-white px-4 py-2 rounded text-sm font-bold shadow hover:bg-gray-800"><i
+                        class="fas fa-plus mr-2"></i>Add New
+                </button>
+            </div>
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-bold">PLA</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="text-blue-600 hover:underline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">PETG</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="text-blue-600 hover:underline">Edit</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Resin (SLA)</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="text-blue-600 hover:underline">Edit</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-complaints" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">Support
+                    Tickets</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Title</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr class="bg-red-50">
+                        <td class="px-6 py-4 text-xs font-bold text-red-600">#CMP-99</td>
+                        <td class="px-6 py-4 font-bold">Damaged Item</td>
+                        <td class="px-6 py-4 text-sm">Alex Doe</td>
+                        <td class="px-6 py-4 text-sm">Nov 20</td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-reply')"
+                                    class="bg-red-600 text-white px-3 py-1 rounded text-xs shadow-sm hover:bg-red-700">
+                                Resolve
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="bg-yellow-50">
+                        <td class="px-6 py-4 text-xs font-bold text-yellow-700">#CMP-05</td>
+                        <td class="px-6 py-4 font-bold">Delivery Delay</td>
+                        <td class="px-6 py-4 text-sm">Sam Smith</td>
+                        <td class="px-6 py-4 text-sm">Oct 15</td>
+                        <td class="px-6 py-4">
+                            <button onclick="openModal('modal-reply')"
+                                    class="bg-yellow-600 text-white px-3 py-1 rounded text-xs shadow-sm hover:bg-yellow-700">
+                                Investigate
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-feedback" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Rating</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Alex Doe</td>
+                        <td class="px-6 py-4 text-yellow-500 text-xs">★★★★★</td>
+                        <td class="px-6 py-4 text-sm italic">"Amazing quality and fast shipping!"</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold">Sam Smith</td>
+                        <td class="px-6 py-4 text-yellow-500 text-xs">★★★★☆</td>
+                        <td class="px-6 py-4 text-sm italic">"Good print, packaging slightly damaged."</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-requests" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">Job
+                    Requests</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Req ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">File</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Target Shop</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-mono">REQ-101</td>
+                        <td class="px-6 py-4 font-bold">Dragon_Figurine.obj</td>
+                        <td class="px-6 py-4">Alex Doe</td>
+                        <td class="px-6 py-4">Maker Studio</td>
+                        <td class="px-6 py-4"><span
+                                class="text-green-600 text-xs font-bold bg-green-50 px-2 py-1 rounded">Accepted</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-mono">REQ-102</td>
+                        <td class="px-6 py-4 font-bold">Helmet_Parts.zip</td>
+                        <td class="px-6 py-4">Sam Smith</td>
+                        <td class="px-6 py-4">The Forge</td>
+                        <td class="px-6 py-4"><span
+                                class="text-yellow-600 text-xs font-bold bg-yellow-50 px-2 py-1 rounded">Pending</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-mono">REQ-103</td>
+                        <td class="px-6 py-4 font-bold">Drone Chassis</td>
+                        <td class="px-6 py-4">Tech Corp</td>
+                        <td class="px-6 py-4">Aero Parts</td>
+                        <td class="px-6 py-4"><span
+                                class="text-yellow-600 text-xs font-bold bg-yellow-50 px-2 py-1 rounded">Pending</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-payments" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">
+                    Transaction History</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Txn ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">User</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-mono">PAY-1001</td>
+                        <td class="px-6 py-4 font-bold text-green-600">$15.00</td>
+                        <td class="px-6 py-4">Alex Doe</td>
+                        <td class="px-6 py-4 text-sm">Oct 25, 2025</td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 text-xs font-mono">PAY-0998</td>
+                        <td class="px-6 py-4 font-bold text-green-600">$45.00</td>
+                        <td class="px-6 py-4">Tech Corp</td>
+                        <td class="px-6 py-4 text-sm">Oct 10, 2025</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="view-orders" class="content-view hidden fade-in">
+            <div class="bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50"><h3 class="font-bold text-gray-800">All
+                    Orders</h3></div>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Order ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Item</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Customer</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Shop</th>
+                        <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase">Status</th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4 font-bold text-xs font-mono">ORD-552</td>
+                        <td class="px-6 py-4">Mechanical Gears</td>
+                        <td class="px-6 py-4">Alex Doe</td>
+                        <td class="px-6 py-4">Maker Studio</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">Printing</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="px-6 py-4 font-bold text-xs font-mono">ORD-550</td>
+                        <td class="px-6 py-4">Prototype Chassis</td>
+                        <td class="px-6 py-4">Tech Corp</td>
+                        <td class="px-6 py-4">The Forge</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Dispatched</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<div id="modal-approve"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-2xl w-96 text-center transform transition-all scale-100">
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i
+                class="fas fa-check text-green-600 text-xl"></i></div>
+        <h3 class="text-lg font-bold mb-2">Approve Shop?</h3>
+        <p class="text-sm text-gray-500 mb-6">This will grant full access to the platform.</p>
+        <div class="flex justify-center gap-3">
+            <button onclick="closeModal('modal-approve')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded font-medium transition-colors">Cancel
+            </button>
+            <button onclick="closeModal('modal-approve')"
+                    class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded font-bold shadow-lg shadow-green-200 transition-colors">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-reject"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-2xl w-96 transform transition-all scale-100">
+        <h3 class="font-bold mb-4 text-red-600"><i class="fas fa-times-circle mr-2"></i>Reject Application</h3>
+        <textarea class="w-full border p-3 rounded mb-4 text-sm focus:ring-2 focus:ring-red-500 outline-none" rows="3"
+                  placeholder="Reason for rejection..."></textarea>
+        <div class="flex justify-end gap-2">
+            <button onclick="closeModal('modal-reject')"
+                    class="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium">Cancel
+            </button>
+            <button onclick="closeModal('modal-reject')"
+                    class="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded text-sm font-bold shadow-lg shadow-red-200">
+                Reject
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-block"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-2xl w-96 text-center">
+        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4"><i
+                class="fas fa-ban text-red-600 text-xl"></i></div>
+        <h3 class="text-lg font-bold mb-2 text-gray-900">Block Access?</h3>
+        <p class="text-sm text-gray-500 mb-6">User/Shop will be unable to login.</p>
+        <div class="flex justify-center gap-3">
+            <button onclick="closeModal('modal-block')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded font-medium">Cancel
+            </button>
+            <button onclick="closeModal('modal-block')"
+                    class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded font-bold shadow-lg shadow-red-200">
+                Block
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="modal-reply"
+     class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
+    <div class="bg-white p-6 rounded-lg shadow-2xl w-full max-w-lg mx-4">
+        <h3 class="font-bold mb-4 text-gray-800"><i class="fas fa-reply mr-2 text-brand-orange"></i>Send Reply</h3>
+        <div class="mb-4">
+            <label class="text-xs font-bold text-gray-500 uppercase">To User</label>
+            <input type="text" value="Alex Doe" class="w-full border-b p-2 bg-gray-50 text-sm mb-2" readonly>
+        </div>
+        <textarea class="w-full border p-3 rounded mb-4 h-32 text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                  placeholder="Write your response here..."></textarea>
+        <div class="flex justify-end gap-2">
+            <button onclick="closeModal('modal-reply')"
+                    class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded text-sm font-medium">Cancel
+            </button>
+            <button onclick="closeModal('modal-reply')"
+                    class="px-4 py-2 bg-brand-orange hover:bg-orange-700 text-white rounded text-sm font-bold shadow-lg shadow-orange-200">
+                Send Reply
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Sidebar Toggle
+    let isSidebarOpen = true;
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const logo = document.getElementById('logo-container');
+        const menuSpans = document.querySelectorAll('.menu-item span');
+
+        if (isSidebarOpen) {
+            sidebar.style.width = '5rem'; // w-20
+            logo.classList.add('hidden');
+            menuSpans.forEach(el = > el.classList.add('hidden')
+        )
+            ;
+        } else {
+            sidebar.style.width = '16rem'; // w-64
+            logo.classList.remove('hidden');
+            menuSpans.forEach(el = > el.classList.remove('hidden')
+        )
+            ;
+        }
+        isSidebarOpen = !isSidebarOpen;
+    }
+
+    // Tab Switching Logic
+    function switchTab(tabId, element) {
+        // Hide all views
+        document.querySelectorAll('.content-view').forEach(el = > el.classList.add('hidden')
+    )
+        ;
+        // Show target view
+        document.getElementById('view-' + tabId).classList.remove('hidden');
+
+        // Dynamic Title Update
+        const titles = {
+            'dashboard': 'Action Center',
+            'verify-shops': 'Shop Verification',
+            'approved-shops': 'Approved Partners',
+            'users': 'User Directory',
+            'categories': 'Material Categories',
+            'complaints': 'Support Tickets',
+            'feedback': 'User Feedback',
+            'requests': 'Job Requests',
+            'payments': 'Transaction History',
+            'orders': 'Order Management'
+        };
+        document.getElementById('page-title').innerText = titles[tabId] || 'Dashboard';
+
+        // Handle Navigation Active States
+        // If function called from dashboard card, find the matching sidebar link
+        let targetNavElement = element;
+        if (!element) {
+            // Find link in sidebar that calls this function
+            const navLinks = document.querySelectorAll('.menu-item');
+            navLinks.forEach(link = > {
+                if(link.getAttribute('onclick').includes(tabId)
+        )
+            targetNavElement = link;
+        })
+            ;
+        }
+
+        // Update Active Classes
+        document.querySelectorAll('.menu-item').forEach(el = > {
+            el.classList.remove('bg-brand-orange', 'text-white', 'border-white', 'active');
+        el.classList.add('text-gray-300', 'hover:bg-gray-700', 'border-transparent');
+    })
+        ;
+        if (targetNavElement) {
+            targetNavElement.classList.remove('text-gray-300', 'hover:bg-gray-700', 'border-transparent');
+            targetNavElement.classList.add('bg-brand-orange', 'text-white', 'border-white', 'active');
+        }
+    }
+
+    // Modal Logic
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registered Users - Admin</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .table-container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .page-title { margin-bottom: 20px; font-weight: bold; color: #2b2320; }
+        .btn-action { margin-right: 5px; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="page-title">Registered Users</h2>
+            <a href="{% url 'admin_home' %}" class="btn btn-secondary btn-sm">Back to Dashboard</a>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="table-container">
+            <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width: 5%;">ID</th>
+                        <th style="width: 30%;">User Profile</th>
+                        <th style="width: 25%;">Email</th>
+                        <th style="width: 15%;">Role Interest</th>
+                        <th style="width: 15%;">Joined Date</th>
+                        <th style="width: 10%;">Actions</th>
+                    </tr>
+                </thead>
+{#                <tbody>#}
+{#                    {% for user in users %}#}
+{#                    <tr>#}
+{#                        <td>{{ user.id }}</td>#}
+{#                        <td>#}
+{#                            <div class="d-flex align-items-center">#}
+{#                                <span class="badge rounded-pill bg-primary text-white border me-2">#}
+{#                                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}#}
+{#                                </span>#}
+{#                                <strong>{{ user.first_name }} {{ user.last_name }}</strong>#}
+{#                            </div>#}
+{#                        </td>#}
+{#                        <td>@{{ user.username }}</td>#}
+{#                        <td>{{ user.email }}</td>#}
+{#                        <td>{{ user.userprofile.phone }}</td>#}
+{#                        <td>{{ user.userprofile.place }}</td>#}
+{#                        <td>#}
+{#                            <span class="badge bg-secondary">{{ user.userprofile.user_type_interest }}</span>#}
+{#                        </td>#}
+{#                        <td>{{ user.date_joined|date:"M d, Y" }}</td>#}
+{#                        <td>#}
+{#                            <a href="#" class="btn btn-danger btn-sm btn-action" onclick="return confirm('Are you sure you want to block {{ user.username }}?');">#}
+{#                                <i class="fas fa-ban"></i> Block#}
+{#                            </a>#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    {% empty %}#}
+{#                    <tr>#}
+{#                        <td colspan="9" class="text-center text-muted py-4">#}
+{#                            No registered users found.#}
+{#                        </td>#}
+{#                    </tr>#}
+{#                    {% endfor %}#}
+{#                </tbody>#}
+                <tbody>
+                {% for user in users %}
+                    <tr>
+                        <td class="fw-bold text-secondary">#{{ user.id }}</td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center me-2"
+                                     style="width: 35px; height: 35px; font-size: 0.9rem;">
+                                    {{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ user.first_name }} {{ user.last_name }}</div>
+                                    <div class="small text-muted">@{{ user.username }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="badge bg-secondary rounded-pill px-3">{{ user.userprofile.user_type_interest }}</span>
+                        </td>
+                        <td class="text-muted small">{{ user.date_joined|date:"M d, Y" }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
+                                    data-bs-target="#userModal{{ user.id }}">
+                                <i class="bi bi-eye"></i> Details
+                            </button>
+
+                            <div class="modal fade" id="userModal{{ user.id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title fw-bold">{{ user.first_name }}'s Profile</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row mb-3">
+                                                <div class="col-6">
+                                                    <small class="text-muted text-uppercase fw-bold">Username</small>
+                                                    <p class="mb-0">@{{ user.username }}</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small class="text-muted text-uppercase fw-bold">Role</small>
+                                                    <p class="mb-0">{{ user.userprofile.user_type_interest }}</p>
+                                                </div>
+                                            </div>
+                                            <hr class="my-2">
+
+                                            <div class="mb-3 mt-3">
+                                                <label class="small text-muted fw-bold"><i class="bi bi-telephone me-1"></i> Phone Number</label>
+                                                <p class="fw-bold">{{ user.userprofile.phone|default:"Not Provided" }}</p>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="small text-muted fw-bold"><i class="bi bi-geo-alt me-1"></i> Location</label>
+                                                <p class="fw-bold">{{ user.userprofile.place|default:"Not Provided" }}</p>
+                                            </div>
+
+                                            <div class="alert alert-light border small text-muted mb-0">
+                                                User joined on {{ user.date_joined|date:"F j, Y" }}
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer pt-0 border-0">
+                                            <button type="button" class="btn btn-sm btn-secondary w-100" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">No registered users found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

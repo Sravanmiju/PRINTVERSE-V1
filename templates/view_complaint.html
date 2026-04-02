@@ -1,0 +1,263 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Management - Admin</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e0e0e0;
+        }
+
+        .page-title {
+            font-weight: 800;
+            color: #2b2320;
+            margin: 0;
+        }
+
+        .table thead th {
+            background-color: #f1f3f5;
+            color: #495057;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .badge-custom {
+            padding: 6px 10px;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border-radius: 4px;
+        }
+
+        .msg-box {
+            background: #f8f9fa;
+            border-left: 3px solid #ced4da;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .reply-box {
+            background: #e3f2fd;
+            border-left: 3px solid #2196f3;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Complaint Management</h2>
+            <p class="text-muted small mb-0">Overview of all disputes and platform issues.</p>
+        </div>
+        <a href="{% url 'admin_home' %}" class="btn btn-dark btn-sm px-4">
+            <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+        </a>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead>
+                <tr>
+                    <th style="width: 5%">ID</th>
+                    <th style="width: 25%">FROM (Sender)</th>
+                    <th style="width: 20%">TO (Target)</th>
+                    <th style="width: 30%">Issue & History</th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 10%">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for complaint in complaints %}
+                    <tr>
+                        <td class="fw-bold text-secondary">#{{ complaint.id }}</td>
+
+                        <td>
+                            {% if complaint.complaint_type == 'Shop' %}
+                                <div class="d-flex align-items-start">
+                                    <div class="bg-primary text-white rounded p-2 me-2 shadow-sm"
+                                         style="background-color: #f03c02 !important;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <span class="badge mb-1 badge-custom" style="background-color: #f03c02;">CUSTOMER</span><br>
+                                        <strong class="text-dark">
+                                            {% if complaint.USER.first_name %}
+                                                {{ complaint.USER.first_name }} {{ complaint.USER.last_name }}
+                                            {% else %}
+                                                {{ complaint.USER.username }}
+                                            {% endif %}
+                                        </strong>
+                                        {% if complaint.USER.userprofile.phone %}
+                                            <br>
+                                            <small class="text-muted">Ph: {{ complaint.USER.userprofile.phone }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                            {% elif complaint.USER.shop %}
+                                <div class="d-flex align-items-start">
+                                    <div class="bg-dark text-white rounded p-2 me-2 shadow-sm">
+                                        <i class="fas fa-store"></i>
+                                    </div>
+                                    <div>
+                                        <span class="badge bg-dark mb-1 badge-custom">SHOP PARTNER</span><br>
+                                        <strong class="text-dark">{{ complaint.USER.shop.shop_name }}</strong><br>
+                                        <small class="text-muted">Owner: {{ complaint.USER.shop.owner_name }}</small>
+                                    </div>
+                                </div>
+
+                            {% else %}
+                                <div class="d-flex align-items-start">
+                                    <div class="bg-primary text-white rounded p-2 me-2 shadow-sm"
+                                         style="background-color: #f03c02 !important;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>
+                                        <span class="badge mb-1 badge-custom" style="background-color: #f03c02;">CUSTOMER</span><br>
+                                        <strong class="text-dark">
+                                            {% if complaint.USER.first_name %}
+                                                {{ complaint.USER.first_name }} {{ complaint.USER.last_name }}
+                                            {% else %}
+                                                {{ complaint.USER.username }}
+                                            {% endif %}
+                                        </strong>
+                                        {% if complaint.USER.userprofile.phone %}
+                                            <br>
+                                            <small class="text-muted">Ph: {{ complaint.USER.userprofile.phone }}</small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if complaint.complaint_type == 'Shop' %}
+                                <div class="p-2 border rounded bg-warning bg-opacity-10 border-warning">
+                                    <span class="badge bg-warning text-dark mb-1">AGAINST SHOP</span><br>
+                                    <i class="fas fa-store-alt text-muted me-1"></i>
+                                    <strong class="text-dark">{{ complaint.SHOP.shop_name }}</strong>
+                                </div>
+                            {% else %}
+                                <div class="p-2 border rounded bg-light">
+                                    <span class="badge bg-secondary mb-1">TO PLATFORM</span><br>
+                                    <i class="fas fa-server text-muted me-1"></i>
+                                    <strong class="text-dark">Admin Support</strong>
+                                </div>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="mb-2">
+                                <strong class="small text-muted text-uppercase d-block mb-1">Title: {{ complaint.title }}</strong>
+                                <div class="msg-box">{{ complaint.description }}</div>
+                            </div>
+                            {% if complaint.reply %}
+                                <div class="mt-2">
+                                    <strong class="small text-success text-uppercase"><i
+                                            class="fas fa-history me-1"></i>History:</strong>
+                                    <div class="reply-box" style="white-space: pre-wrap;">{{ complaint.reply }}</div>
+                                </div>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if complaint.status == 'Resolved' %}
+                                <span class="badge bg-success badge-custom">Resolved</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark badge-custom">Pending</span>
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <button type="button" class="btn btn-outline-dark btn-sm w-100 fw-bold"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#replyModal"
+                                    onclick="setReplyModalData('{{ complaint.id }}', '{{ complaint.USER.username }}')">
+                                <i class="fas fa-reply me-1"></i> Reply
+                            </button>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-5">No complaints found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="replyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h5 class="modal-title fw-bold">Send Official Reply</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'reply_complaint' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="complaint_id" id="modal_complaint_id">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Replying To:</label>
+                        <input type="text" class="form-control bg-light" id="modal_user_name" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Admin Response</label>
+                        <textarea class="form-control" name="reply_text" rows="5" required
+                                  placeholder="Type your resolution here..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4"
+                            style="background-color: #f03c02; border-color: #f03c02;">Send Reply
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+    function setReplyModalData(id, name) {
+        document.getElementById('modal_complaint_id').value = id;
+        document.getElementById('modal_user_name').value = name;
+    }
+</script>
+</body>
+</html>

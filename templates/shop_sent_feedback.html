@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Partner Feedback - PrintVerse</title>
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .form-card {
+        background: white;
+        border-radius: 8px;
+        padding: 40px;
+        max-width: 600px;
+        margin: 60px auto;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .btn-brand { background-color: #2b2320; color: white; border:none; }
+    .btn-brand:hover { background-color: #000; color: white; }
+  </style>
+</head>
+<body>
+
+  <header class="bg-white shadow-sm p-3 mb-4">
+    <div class="container d-flex justify-content-between align-items-center">
+        <h4 class="m-0 fw-bold" style="color: #2b2320;">Partner Feedback</h4>
+        <a href="{% url 'shop_home' %}" class="btn btn-outline-dark btn-sm">Back to Console</a>
+    </div>
+  </header>
+
+  <div class="container">
+      <div class="form-card">
+          <div class="text-center mb-4">
+              <h5 class="fw-bold">How is your experience with PrintVerse?</h5>
+              <p class="text-muted small">Your feedback helps us improve the platform for partners.</p>
+          </div>
+
+          <form method="POST" action="{% url 'submit_shop_feedback' %}">
+              {% csrf_token %}
+
+              <div class="mb-4">
+                  <label class="form-label fw-bold small text-uppercase">Satisfaction Rating</label>
+                  <select name="rating" class="form-select" required>
+                      <option value="5" selected>★★★★★ - Highly Satisfied</option>
+                      <option value="4">★★★★☆ - Satisfied</option>
+                      <option value="3">★★★☆☆ - Neutral</option>
+                      <option value="2">★★☆☆☆ - Dissatisfied</option>
+                      <option value="1">★☆☆☆☆ - Highly Dissatisfied</option>
+                  </select>
+              </div>
+
+              <div class="mb-4">
+                  <label class="form-label fw-bold small text-uppercase">Suggestions / Comments</label>
+                  <textarea name="description" class="form-control" rows="5" placeholder="How can we help you grow your business?" required></textarea>
+              </div>
+
+              <div class="d-grid">
+                  <button type="submit" class="btn btn-brand py-2 fw-bold">Submit Feedback</button>
+              </div>
+          </form>
+      </div>
+  </div>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

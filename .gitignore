@@ -1,0 +1,16 @@
+# Python environment
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Django Database (Keep your local test users safe)
+db.sqlite3
+
+# PyCharm settings
+.idea/
+
+# CRITICAL: Do NOT upload AI Weights or heavy 3D files to GitHub
+weights/
+media/
+TripoSR/

@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Submit Complaint - PrintVerse</title>
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    body { background-color: #f4f6f8; }
+    .form-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        padding: 40px;
+        max-width: 700px;
+        margin: 60px auto;
+        border: 1px solid #e0e0e0;
+    }
+    .btn-brand { background-color: #f03c02; color: white; border: none; font-weight: 600; transition: 0.3s; }
+    .btn-brand:hover { background-color: #d63500; color: white; }
+    .form-label { font-weight: 700; color: #555; font-size: 0.85rem; text-transform: uppercase; }
+  </style>
+</head>
+
+<body>
+
+  <header id="header" class="header sticky-top bg-white shadow-sm">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+          <h1 class="sitename" style="color: #2b2320;">PrintVerse</h1>
+        </a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'user_home' %}">Back to Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="form-card">
+          <div class="text-center mb-5">
+              <h3 class="fw-bold text-dark">Submit Support Ticket</h3>
+              <p class="text-muted small">We usually respond within 24 hours.</p>
+          </div>
+
+          <form method="POST" action="{% url 'submit_user_complaint' %}">
+              {% csrf_token %}
+
+              <div class="mb-4">
+                  <label class="form-label">Complaint Against</label>
+                  <select name="complaint_type" id="complaintType" class="form-select" onchange="toggleShopDropdown()" required>
+                      <option value="Platform">Platform / Admin (General Issue)</option>
+                      <option value="Shop">Specific Shop (Order/Product Issue)</option>
+                  </select>
+              </div>
+
+              <div class="mb-4" id="shopDropdown" style="display: none;">
+                  <label class="form-label">Select Shop</label>
+                  <select name="shop_id" class="form-select">
+                      <option value="">-- Choose Shop --</option>
+                      {% for shop in shops %}
+                          <option value="{{ shop.id }}">{{ shop.shop_name }} ({{ shop.place }})</option>
+                      {% endfor %}
+                  </select>
+              </div>
+
+              <div class="mb-4">
+                  <label class="form-label">Subject / Title</label>
+                  <input type="text" name="title" class="form-control" placeholder="e.g. Broken Item, Payment Delay" required>
+              </div>
+
+              <div class="mb-4">
+                  <label class="form-label">Description</label>
+                  <textarea name="description" class="form-control" rows="6" placeholder="Please describe your issue in detail..." required></textarea>
+              </div>
+
+              <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-brand py-2">Submit Ticket</button>
+                  <a href="{% url 'user_home' %}" class="btn btn-light border text-muted">Cancel</a>
+              </div>
+          </form>
+      </div>
+    </div>
+  </main>
+
+  {% include 'footer.html' %}
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <script>
+      function toggleShopDropdown() {
+          var type = document.getElementById("complaintType").value;
+          var dropdown = document.getElementById("shopDropdown");
+          if (type === "Shop") {
+              dropdown.style.display = "block";
+              dropdown.querySelector('select').required = true; // Make shop mandatory if type is Shop
+          } else {
+              dropdown.style.display = "none";
+              dropdown.querySelector('select').required = false;
+          }
+      }
+  </script>
+</body>
+</html>

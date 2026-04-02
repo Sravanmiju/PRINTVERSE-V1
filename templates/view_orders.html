@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management - Admin</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { padding: 20px; background-color: #f8f9fa; }
+        .table-card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .page-title { font-weight: 800; color: #2b2320; margin: 0; }
+        .price-tag { font-weight: 800; color: #198754; font-size: 1.1rem; }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="page-title">Active Orders</h2>
+                <p class="text-muted small mb-0">Tracking active jobs, printing progress, and quotes.</p>
+            </div>
+            <a href="{% url 'admin_home' %}" class="btn btn-dark btn-sm px-4">
+                <i class="fas fa-arrow-left me-2"></i> Dashboard
+            </a>
+        </div>
+
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Fulfilled By (Shop)</th>
+                            <th>Quote Amount</th>
+                            <th>Current Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td class="fw-bold text-dark">#ORD-{{ order.id }}</td>
+                            <td class="small text-muted">{{ order.created_at|date:"M d, Y" }}</td>
+
+                            <td>
+                                <span class="fw-bold text-dark">{{ order.USER.USER.first_name }}</span><br>
+                                <small class="text-muted">Ph: {{ order.USER.phone }}</small>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-dark mb-1">{{ order.SHOP.shop_name }}</span><br>
+                                <small class="text-muted">Owner: {{ order.SHOP.owner_name }}</small>
+                            </td>
+
+                            <td class="price-tag">${{ order.amount }}</td>
+
+                            <td>
+                                {% if order.status == 'Accepted' %}
+                                    <span class="badge bg-info text-dark">Quote Sent</span>
+                                {% elif order.status == 'Paid' %}
+                                    <span class="badge bg-success">Paid</span>
+                                {% elif order.status == 'Printing' %}
+                                    <span class="badge bg-primary">In Production</span>
+                                {% elif order.status == 'Delivered' %}
+                                    <span class="badge bg-secondary">Completed</span>
+                                {% else %}
+                                    <span class="badge bg-light text-dark border">{{ order.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" class="text-center py-5 text-muted">No active orders found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

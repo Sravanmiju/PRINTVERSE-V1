@@ -1,0 +1,869 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Shop Console - PrintVerse</title>
+    <meta name="description" content="Manage orders, requests, and support.">
+
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lato:wght@400;700;900&family=Raleway:wght@300;400;600;800&display=swap"
+          rel="stylesheet">
+
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+    <style>
+        /* --- Professional Business Theme --- */
+        :root {
+            --brand-color: #f03c02;
+            --brand-hover: #d63500;
+            --bg-light: #f8f9fa;
+            --text-dark: #2b2320;
+            --card-border: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+        }
+
+        /* Job Cards */
+        .job-card {
+            background: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+            height: 100%;
+            transition: 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .job-img-wrap {
+            height: 150px;
+            width: 100%;
+            position: relative;
+            background: #f9f9f9;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .job-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .job-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #f0f0f0;
+            background: #fff;
+            margin-top: auto;
+        }
+
+        .origin-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bg-user-upload {
+            background: #212529;
+            color: white;
+        }
+
+        /* Management Tabs */
+        .account-nav {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .account-nav .nav-link {
+            color: #555;
+            font-weight: 600;
+            border: none;
+            padding: 15px 25px;
+            background: transparent;
+            border-bottom: 3px solid transparent;
+        }
+
+        .account-nav .nav-link.active {
+            color: var(--brand-color);
+            border-bottom: 3px solid var(--brand-color);
+            background: white;
+        }
+
+        .status-text {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body class="index-page">
+
+<header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center light-background">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:support@printverse.com">support@printverse.com</a></i>
+            </div>
+            <div class="social-links d-none d-md-flex align-items-center">
+                <span class="text-secondary small">Partner: <strong>{{ request.user.shop.shop_name }}</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="{% url 'shop_home' %}" class="logo d-flex align-items-center">
+                <h1 class="sitename">PrintVerse</h1>
+                <span class="badge bg-dark ms-2 text-white fw-normal"
+                      style="font-size: 0.7rem; padding: 5px 8px; letter-spacing: 1px;">PARTNER CONSOLE</span>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="#jobs" class="active">Job Board</a></li>
+                    <li><a href="#management">Management</a></li>
+                    {#                    <li class="dropdown">#}
+                    {#                        <a href="#"><span>ACCOUNT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>#}
+                    {#                        <ul>#}
+                    {#                            <li><a href="{% url 'logout' %}" style="color: var(--brand-color);">Logout</a></li>#}
+                    {#                        </ul>#}
+                    {#                    </li>#}
+                    <li class="dropdown">
+                        <a href="#"><span>ACCOUNT</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="#" data-bs-toggle="modal" data-bs-target="#shopProfileModal">Shop Settings</a>
+                            </li>
+                            <li><a href="{% url 'logout' %}" style="color: var(--brand-color);">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <section id="jobs" class="section">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold m-0">Incoming Requests</h4>
+                {% if incoming_requests|length > 4 %}
+                    <button class="btn btn-outline-dark btn-sm" id="view-all-btn">View All Requests</button>
+                {% endif %}
+            </div>
+
+            <div class="row gy-4" id="job-grid">
+                {% for req in incoming_requests %}
+                    <div class="col-lg-3 col-md-6 {% if forloop.counter > 4 %}d-none job-hidden{% endif %}">
+                        <div class="job-card">
+                            <div class="job-img-wrap">
+                                <i class="bi bi-box-seam display-1 text-secondary opacity-25"></i>
+                                <span class="origin-badge bg-user-upload">New Request</span>
+                            </div>
+                            <div class="job-body">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <small class="text-muted">ID: #{{ req.id }}</small>
+                                    <small class="text-muted">{{ req.created_at|date:"M d" }}</small>
+                                </div>
+                                <h6 class="fw-bold mb-1 text-truncate">{{ req.model_file.name }}</h6>
+                                <p class="small text-muted mb-2">User: <strong>{{ req.USER.USER.first_name }}</strong>
+                                </p>
+                                <p class="small text-secondary bg-light p-2 rounded border mb-0">{{ req.description|truncatechars:30 }}</p>
+
+                                <a href="{{ req.model_file.url }}" class="small text-primary fw-bold mt-2 d-block"
+                                   download>
+                                    <i class="bi bi-download me-1"></i> Download File
+                                </a>
+                            </div>
+                            <div class="job-footer d-grid gap-2">
+                                <button class="btn btn-dark btn-sm"
+                                        onclick="openAcceptModal(
+                                                '{{ req.id }}',
+                                                '{{ req.description|escapejs }}',
+                                                '{{ req.delivery_address|default:'No address'|escapejs }}'
+                                                )">
+                                    Accept & Quote
+                                </button>
+
+                                <button class="btn btn-outline-secondary btn-sm"
+                                        onclick="openRejectModal('{{ req.id }}', '{{ req.description|escapejs }}')">
+                                    Decline
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <div class="p-5 border rounded bg-white">
+                            <i class="bi bi-inbox fs-1 text-muted opacity-25"></i>
+                            <p class="text-muted mt-2">No incoming requests at the moment.</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section id="management" class="section light-background">
+        <div class="container">
+            <div class="section-title mb-3">
+                <h3>Management Console</h3>
+            </div>
+
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white pt-4 px-4 border-bottom-0">
+                    <ul class="nav nav-tabs account-nav" id="shopTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="orders-tab" data-bs-toggle="tab"
+                                    data-bs-target="#orders">Active Orders
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="complaints-tab" data-bs-toggle="tab"
+                                    data-bs-target="#customer_complaints">User Complaints
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="admin-tab" data-bs-toggle="tab" data-bs-target="#admin">Contact
+                                Admin
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews">
+                                Reviews
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade show active" id="orders">
+                            <div class="table-responsive">
+                                <table class="table align-middle table-hover table-custom">
+                                    <thead>
+                                    <tr>
+                                        <th>Req ID</th>
+                                        <th>File / Item</th>
+                                        <th>Customer</th>
+                                        <th>Delivery Address</th>
+                                        <th>Quote Amount</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for order in active_orders %}
+                                        <tr>
+                                            <td class="fw-bold">#{{ order.id }}</td>
+                                            <td>{{ order.model_file.name }}</td>
+                                            <td>{{ order.USER.USER.first_name }}</td>
+
+                                            <td>
+                                                <div style="max-width: 200px; font-size: 0.85rem;"
+                                                     class="text-secondary">
+                                                    <i class="bi bi-geo-alt me-1"></i>{{ order.delivery_address }}
+                                                </div>
+                                            </td>
+                                            <td><span class="text-dark fw-bold small">${{ order.amount }}</span></td>
+
+                                            <td>
+                                                {% if order.status == 'Accepted' %}
+                                                    <span class="badge bg-info text-dark">Quote Sent</span>
+                                                {% elif order.status == 'Printing' %}
+                                                    <span class="badge bg-primary">Printing</span>
+                                                {% elif order.status == 'Ready' %}
+                                                    <span class="badge bg-warning text-dark">Ready</span>
+                                                {% elif order.status == 'Dispatched' %}
+                                                    <span class="badge bg-purple text-white"
+                                                          style="background-color: #6f42c1;">Dispatched</span>
+                                                {% elif order.status == 'Delivered' %}
+                                                    <span class="badge bg-success">Delivered</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">{{ order.status }}</span>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                <form action="{% url 'update_order_progress' %}" method="POST"
+                                                      class="d-flex gap-1">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="req_id" value="{{ order.id }}">
+                                                    <select name="status"
+                                                            class="form-select form-select-sm border-secondary"
+                                                            style="width: 130px;">
+                                                        <option value="Printing"
+                                                                {% if order.status == 'Printing' %}selected{% endif %}>
+                                                            Printing
+                                                        </option>
+                                                        <option value="Ready"
+                                                                {% if order.status == 'Ready' %}selected{% endif %}>
+                                                            Ready
+                                                        </option>
+                                                        <option value="Dispatched"
+                                                                {% if order.status == 'Dispatched' %}selected{% endif %}>
+                                                            Dispatched
+                                                        </option>
+                                                        <option value="Delivered"
+                                                                {% if order.status == 'Delivered' %}selected{% endif %}>
+                                                            Delivered
+                                                        </option>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-sm btn-dark"
+                                                            title="Update Status">
+                                                        <i class="bi bi-check-lg"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="7" class="text-center py-4 text-muted">No active orders
+                                                found.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="customer_complaints">
+                            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded shadow-sm border">
+                                <div>
+                                    <h5 class="fw-bold m-0 text-dark">Customer Complaints</h5>
+                                    <p class="text-muted small mb-0">Overview of issues reported by your customers.</p>
+                                </div>
+                                <a href="{% url 'user_complaints_toshop' %}" class="btn text-white fw-bold px-4"
+                                   style="background-color: #f03c02;">
+                                    View Full List
+                                </a>
+                            </div>
+
+                            <div class="bg-white rounded shadow-sm border overflow-hidden">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">Status</th>
+                                        <th>Customer</th>
+                                        <th>Issue</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for c in received_complaints|slice:":5" %}
+                                        <tr>
+                                            <td class="ps-4">
+                                                {% if c.status == 'Resolved' %}
+                                                    <span class="badge bg-success">Resolved</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="fw-bold">{{ c.USER.username }}</td>
+                                            <td>{{ c.title }}</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-dark"
+                                                        onclick="openReplyCustomerModal('{{ c.id }}', '{{ c.USER.username }}', '{{ c.title|escapejs }}', '{{ c.description|escapejs }}')">
+                                                    Reply
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">No active complaints.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="admin">
+                            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded shadow-sm border">
+                                <div>
+                                    <h5 class="fw-bold m-0 text-dark">Support Tickets</h5>
+                                    <p class="text-muted small mb-0">History of issues you reported to PrintVerse
+                                        Admin.</p>
+                                </div>
+                                <a href="{% url 'shop_sent_complaint' %}" class="btn text-white fw-bold px-4"
+                                   style="background-color: #f03c02;">
+                                    <i class="bi bi-envelope-plus me-1"></i> Report Issue
+                                </a>
+                            </div>
+
+                            <div class="bg-white rounded shadow-sm border overflow-hidden">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                        <tr>
+                                            <th class="ps-4" style="width: 15%;">Status</th>
+                                            <th style="width: 25%;">Subject</th>
+                                            <th style="width: 15%;">Date</th>
+                                            <th style="width: 30%;">Admin Response</th>
+                                            <th style="width: 15%;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for c in sent_complaints %}
+                                            <tr>
+                                                <td class="ps-4">
+                                                    {% if c.status == 'Resolved' %}
+                                                        <span class="badge bg-success">Resolved</span>
+                                                    {% else %}
+                                                        <span class="badge bg-warning text-dark">Pending</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="fw-bold text-dark">{{ c.title }}</td>
+                                                <td class="small text-muted">{{ c.date|date:"M d, Y" }}</td>
+                                                <td>
+                                                    {% if c.reply %}
+                                                        <span class="text-success small fw-bold"><i
+                                                                class="bi bi-check-all"></i> Replied</span>
+                                                    {% else %}
+                                                        <span class="text-muted small fst-italic">Waiting for admin...</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-outline-dark border-0"
+                                                            onclick="openShopAdminReplyModal('{{ c.title|escapejs }}', '{{ c.description|escapejs }}', '{{ c.reply|default:'Pending review...'|escapejs }}')">
+                                                        <i class="bi bi-eye"></i> Details
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="5" class="text-center py-5 text-muted">
+                                                    No support tickets raised yet.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="reviews">
+                            <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 rounded shadow-sm border">
+                                <div>
+                                    <h5 class="fw-bold m-0 text-dark">Shop Reputation</h5>
+                                    <p class="text-muted small mb-0">All ratings and feedback from your customers.</p>
+                                </div>
+                                <a href="{% url 'shop_sent_feedback' %}" class="btn btn-dark fw-bold px-4">
+                                    <i class="bi bi-star me-1"></i> Rate Platform
+                                </a>
+                            </div>
+
+                            <div class="list-group shadow-sm">
+
+                                {% for r in product_reviews %}
+                                    <div class="list-group-item border-0 border-bottom py-3 bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light rounded-circle text-primary fw-bold d-flex align-items-center justify-content-center me-3"
+                                                     style="width: 40px; height: 40px;">
+                                                    {{ r.REQUEST.USER.USER.username|slice:":1"|upper }}
+                                                </div>
+                                                <div>
+                                                    <h6 class="fw-bold mb-0 text-dark">{{ r.REQUEST.USER.USER.first_name }}
+                                                        (Verified Buyer)</h6>
+                                                    <div class="text-muted" style="font-size: 0.75rem;">
+                                                        <span class="badge bg-light text-dark border me-1">Product Review</span>
+                                                        <strong>{{ r.REQUEST.model_file.name }}</strong>
+                                                        <span class="mx-1">•</span> {{ r.date|date:"M d, Y" }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-warning small fw-bold">
+                                                {{ r.rating }} <i class="bi bi-star-fill"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-secondary mb-0 ms-5 small">
+                                            <i class="bi bi-quote me-1 opacity-25"></i>{{ r.description }}
+                                        </p>
+                                    </div>
+                                {% endfor %}
+
+                                {% for f in general_reviews %}
+                                    <div class="list-group-item border-0 border-bottom py-3 bg-white">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="d-flex align-items-center">
+                                                <div class="bg-light rounded-circle text-dark fw-bold d-flex align-items-center justify-content-center me-3"
+                                                     style="width: 40px; height: 40px;">
+                                                    {{ f.USER.username|slice:":1"|upper }}
+                                                </div>
+                                                <div>
+                                                    <h6 class="fw-bold mb-0 text-dark">{{ f.USER.first_name }} {{ f.USER.last_name }}</h6>
+                                                    <div class="text-muted" style="font-size: 0.75rem;">
+                                                        <span class="badge bg-warning text-dark me-1">General Feedback</span>
+                                                        {{ f.date|date:"M d, Y" }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="text-warning small fw-bold">
+                                                {{ f.rating }} <i class="bi bi-star-fill"></i>
+                                            </div>
+                                        </div>
+                                        <p class="text-secondary mb-0 ms-5 small">
+                                            <i class="bi bi-quote me-1 opacity-25"></i>{{ f.description }}
+                                        </p>
+                                    </div>
+                                {% endfor %}
+
+                                {% if not product_reviews and not general_reviews %}
+                                    <div class="text-center py-5 bg-white rounded border">
+                                        <i class="bi bi-chat-square-quote fs-1 text-muted opacity-25 mb-3"></i>
+                                        <p class="text-muted mb-0">No reviews received yet.</p>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+{% include 'footer.html' %}
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<div class="modal fade" id="acceptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{% url 'update_request_status' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="accept">
+                <input type="hidden" name="req_id" id="acceptReqId">
+
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Create Quote for User</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <div class="alert alert-light border mb-3">
+                        <label class="small text-muted fw-bold text-uppercase">User Requirements</label>
+                        <p class="small text-dark mb-2" id="acceptModalDesc">...</p>
+
+                        <hr>
+                        <label class="small text-muted fw-bold text-uppercase"><i class="bi bi-geo-alt-fill"></i>
+                            Delivery Location</label>
+                        <p class="small text-dark mb-0 fw-bold" id="acceptModalAddress">...</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Quote Price ($)</label>
+                        <input type="number" step="0.01" name="price" class="form-control" required placeholder="0.00">
+                    </div>
+                    <div class="text-muted small">Include shipping cost in this price.</div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-dark">Send Quote</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="rejectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{% url 'update_request_status' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="reject">
+                <input type="hidden" name="req_id" id="rejectReqId">
+
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Reject Request</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <div class="alert alert-light border mb-3">
+                        <label class="small text-muted fw-bold text-uppercase">Request Details</label>
+                        <p class="small text-dark mb-0" id="rejectModalDesc">...</p>
+                    </div>
+                    <label class="form-label">Reason for Rejection</label>
+                    <textarea name="reason" class="form-control" rows="2" required
+                              placeholder="E.g. Cannot print this material..."></textarea>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-danger">Confirm Reject</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="replyCustomerModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{% url 'reply_customer_complaint' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="complaint_id" id="replyComplaintId">
+
+                <div class="modal-header border-0 pb-0">
+                    <h6 class="modal-title fw-bold">Reply to Customer</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-3">
+                    <div class="alert alert-light border mb-3">
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted fw-bold text-uppercase">From User</small>
+                            <small class="fw-bold text-dark" id="replyCustomerName">...</small>
+                        </div>
+                        <hr class="my-2">
+                        <strong class="d-block text-dark small mb-1" id="replySubject">...</strong>
+                        <p class="small text-secondary mb-0 fst-italic" id="replyDesc">...</p>
+                    </div>
+
+                    <label class="form-label small fw-bold">Your Response</label>
+                    <textarea name="reply_text" class="form-control" rows="3" placeholder="Write response..."
+                              required></textarea>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-sm btn-dark">Send Reply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="shopAdminReplyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title fw-bold">Ticket Details</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body pt-3">
+                <div class="mb-3">
+                    <label class="small text-muted fw-bold text-uppercase">Subject</label>
+                    <p class="fw-bold mb-0 text-dark" id="modalShopTitle">...</p>
+                </div>
+
+                <div class="mb-3 bg-light p-3 rounded">
+                    <label class="small text-muted fw-bold text-uppercase mb-1">Description</label>
+                    <p class="small text-dark mb-0" id="modalShopDesc">...</p>
+                </div>
+
+                <div>
+                    <label class="small text-success fw-bold text-uppercase mb-1">Admin Response</label>
+                    <div class="p-3 border border-success rounded bg-success bg-opacity-10">
+                        <p class="small text-dark mb-0 fst-italic" id="modalShopReply" style="white-space: pre-wrap;">
+                            ...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+<script>
+    // View All Request Button Logic
+    const viewAllBtn = document.getElementById('view-all-btn');
+
+    // Check if the button exists before adding the listener to prevent errors
+    if (viewAllBtn) {
+        viewAllBtn.addEventListener('click', function () {
+            // Find all hidden items and remove the 'd-none' class
+            document.querySelectorAll('.job-hidden').forEach(item => {
+                item.classList.remove('d-none');
+        });
+            // Hide the "View All" button itself after clicking
+            this.style.display = 'none';
+        });
+    }
+
+    // OPEN ACCEPT MODAL & PASS ID + DESCRIPTION
+    function openAcceptModal(reqId, desc, address) {
+    document.getElementById('acceptReqId').value = reqId;
+    document.getElementById('acceptModalDesc').innerText = desc;
+
+    // Set the address in the modal
+    document.getElementById('acceptModalAddress').innerText = address;
+
+    new bootstrap.Modal(document.getElementById('acceptModal')).show();
+    }
+
+    // OPEN REJECT MODAL & PASS ID + DESCRIPTION
+    function openRejectModal(reqId, desc) {
+        document.getElementById('rejectReqId').value = reqId;
+        // Set the description text
+        document.getElementById('rejectModalDesc').innerText = desc;
+        new bootstrap.Modal(document.getElementById('rejectModal')).show();
+    }
+
+    // OPEN REPLY CUSTOMER MODAL
+    function openReplyCustomerModal(id, name, title, desc) {
+        document.getElementById('replyComplaintId').value = id;
+        document.getElementById('replyCustomerName').innerText = name;
+
+        // NEW: Set Title and Description
+        document.getElementById('replySubject').innerText = title;
+        document.getElementById('replyDesc').innerText = desc;
+
+        new bootstrap.Modal(document.getElementById('replyCustomerModal')).show();
+    }
+
+    // OPEN ADMIN RESPONSE MODAL
+    function openShopAdminReplyModal(title, desc, reply) {
+        document.getElementById('modalShopTitle').innerText = title;
+        document.getElementById('modalShopDesc').innerText = desc;
+        document.getElementById('modalShopReply').innerText = reply;
+        new bootstrap.Modal(document.getElementById('shopAdminReplyModal')).show();
+    }
+</script>
+
+
+<div class="modal fade" id="shopProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Manage Shop Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{% url 'update_shop_profile' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Shop Name</label>
+                            <input type="text" class="form-control" name="shop_name"
+                                   value="{{ request.user.shop.shop_name }}" readonly
+                                   style="background-color: #e9ecef;">
+                            <div class="form-text small text-muted" style="font-size: 0.75rem;">Legal names cannot be changed.</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Owner Name</label>
+                            <input type="text" class="form-control" name="owner_name"
+                                   value="{{ request.user.shop.owner_name }}" readonly
+                                   style="background-color: #e9ecef;">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Email</label>
+                            <input type="email" class="form-control" name="email" value="{{ request.user.shop.email }}"
+                                   readonly style="background-color: #e9ecef;">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Phone</label>
+                            <input type="text" class="form-control" name="phone" value="{{ request.user.shop.phone }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">Shop Category</label>
+                        <select class="form-select" name="shop_type">
+                            {% for cat in categories %}
+                                <option value="{{ cat.category_name }}"
+                                    {% if request.user.shop.shop_type == cat.category_name %}selected{% endif %}>
+                                    {{ cat.category_name }}
+                                </option>
+                            {% empty %}
+                                <option value="{{ request.user.shop.shop_type }}" selected>{{ request.user.shop.shop_type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">City / Location</label>
+                        <input type="text" class="form-control" name="city" value="{{ request.user.shop.place }}">
+                    </div>
+
+                    <hr class="my-4 text-muted">
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Equipment List</label>
+                            <textarea class="form-control" name="equipment"
+                                      rows="3">{{ request.user.shop.equipment }}</textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="small text-muted fw-bold">Materials</label>
+                            <textarea class="form-control" name="materials"
+                                      rows="3">{{ request.user.shop.materials }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">Approx. Turnaround Time (Days)</label>
+                        <input type="number" class="form-control" name="turnaround"
+                               value="{{ request.user.shop.turnaround_time }}" placeholder="e.g. 3">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark fw-bold">Save Updates</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

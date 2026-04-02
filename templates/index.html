@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>PrintVerse - 3D Printing Marketplace</title>
+  <meta name="description" content="Connect with local 3D print shops and convert 2D images to 3D models.">
+  <meta name="keywords" content="3D printing, marketplace, 2D to 3D, print shops">
+
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header sticky-top">
+
+    <div class="topbar d-flex align-items-center light-background">
+      <div class="container d-flex justify-content-center justify-content-md-between">
+        <div class="contact-info d-flex align-items-center">
+          <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:support@printverse.com">support@printverse.com</a></i>
+          <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+        </div>
+        <div class="social-links d-none d-md-flex align-items-center">
+          <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+          <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div><div class="branding d-flex align-items-center">
+
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+          <h1 class="sitename">PrintVerse</h1>
+        </a>
+
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'home' %}" class="active">Home</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#portfolio">Marketplace</a></li>
+
+            <li><a href="{% url 'login' %}">Login</a></li>
+
+            <li class="dropdown">
+              <a href="#"><span>Register</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+              <ul>
+               <li><a href="{% url 'register_shop' %}">Shop</a></li>
+               <li><a href="{% url 'register_user' %}">User</a></li>
+              </ul>
+            </li>
+
+            <li><a href="#footer">Contact</a></li>
+          </ul>
+          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+        </nav>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <main class="main">
+
+    <section id="hero" class="hero section dark-background">
+
+      <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+        <div class="carousel-item active">
+          <img src="{% static 'assets/img/hero-carousel/HS1.jpeg' %}" alt="">
+          <div class="container">
+            <h2>Turn 2D Images into Real 3D Objects</h2>
+            <p>Don't let a lack of design skills stop you. Our AI technology converts your simple photos and sketches into printable 3D models instantly.</p>
+            <a href="{% url 'register_user' %}" class="btn-get-started">Start Converting</a>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <img src="{% static 'assets/img/hero-carousel/HS2.jpg' %}" alt="">
+          <div class="container">
+            <h2>Find Trusted Local Print Shops</h2>
+            <p>Skip the shipping delays. Connect with verified 3D printing shops right in your city. Compare materials and prices.</p>
+            <a href="#portfolio" class="btn-get-started">Browse Marketplace</a>
+          </div>
+        </div>
+
+        <div class="carousel-item">
+          <img src="{% static 'assets/img/hero-carousel/HS3.jpg' %}" alt="">
+          <div class="container">
+            <h2>Empowering Makers & Businesses</h2>
+            <p>Whether you need a single prop or batch production, PrintVerse connects you. Own a printer? Start earning today.</p>
+            <a href="{% url 'register_shop' %}" class="btn-get-started">Join as a Partner</a>
+          </div>
+        </div>
+
+        <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+        </a>
+
+        <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+          <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+        </a>
+
+        <ol class="carousel-indicators"></ol>
+
+      </div>
+
+    </section><section id="call-to-action" class="call-to-action section dark-background">
+      <img src="{% static 'assets/img/cta-bg.jpg' %}" alt="">
+      <div class="container">
+        <div class="row" data-aos="zoom-in" data-aos-delay="100">
+          <div class="col-xl-9 text-center text-xl-start">
+            <h3>Ready to turn your 2D concepts into 3D reality?</h3>
+            <p>Join PrintVerse today to access our exclusive AI modeling tools and connect with verified local print shops.</p>
+          </div>
+          <div class="col-xl-3 cta-btn-container text-center">
+            <a class="cta-btn align-middle" href="{% url 'register_user' %}">Create Free Account</a>
+          </div>
+        </div>
+      </div>
+    </section><section id="services" class="services section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Our Services</h2>
+        <p>A complete ecosystem connecting 2D creativity with 3D manufacturing power.</p>
+      </div>
+
+      <div class="container">
+
+        <div class="row gy-4 justify-content-center">
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-bounding-box-circles"></i></div>
+              <a href="{% url 'register_user' %}" class="stretched-link"><h3>AI Model Generation</h3></a>
+              <p>Instantly convert 2D images into print-ready 3D meshes using advanced NeRF & Triplane algorithms.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-shop-window"></i></div>
+              <a href="#portfolio" class="stretched-link"><h3>Verified Print Shops</h3></a>
+              <p>Access a network of verified local printers. Filter by distance, rating, and equipment type.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-clipboard-data"></i></div>
+              <a href="{% url 'login' %}" class="stretched-link"><h3>Live Order Tracking</h3></a>
+              <p>Monitor your production lifecycle in real-time from "Model Verified" to "Ready for Pickup".</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-layers-half"></i></div>
+              <a href="#portfolio" class="stretched-link"><h3>Material Library</h3></a>
+              <p>Choose from a diverse catalog of materials including PLA, PETG, ABS, and Photo-Resin.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-patch-check"></i></div>
+              <a href="#footer" class="stretched-link"><h3>Quality Assurance</h3></a>
+              <p>Every shop is vetted for capability. We manage disputes to guarantee customer satisfaction.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><section id="portfolio" class="portfolio section">
+
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Marketplace Showcase</h2>
+        <p>Explore our curated selection of 3D printed goods. Filter by category to find the perfect shop for your needs.</p>
+      </div>
+
+      <div class="container">
+
+        <div class="isotope-layout" data-default-filter="*" data-layout="masonry" data-sort="original-order">
+
+          <ul class="portfolio-filters isotope-filters d-flex justify-content-center flex-wrap w-100" data-aos="fade-up" data-aos-delay="100">
+            <li data-filter="*" class="filter-active">All</li>
+            <li data-filter=".filter-fdm">Standard (FDM)</li>
+            <li data-filter=".filter-resin">High Detail (Resin)</li>
+            <li data-filter=".filter-cosplay">Cosplay Props</li>
+          </ul>
+
+          <div class="row gy-4 isotope-container justify-content-center" data-aos="fade-up" data-aos-delay="200">
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-fdm">
+              <img src="{% static 'assets/img/portfolio/P1.1.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Mechanical Gears</h4>
+                <p>Material: PETG</p>
+                <a href="{% static 'assets/img/portfolio/P1.1.png' %}" title="Details" data-gallery="portfolio-gallery-fdm" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-resin">
+              <img src="{% static 'assets/img/portfolio/P2.1.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>RPG Character</h4>
+                <p>Material: 8K Resin</p>
+                <a href="{% static 'assets/img/portfolio/P2.1.png' %}" title="Details" data-gallery="portfolio-gallery-resin" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-cosplay">
+              <img src="{% static 'assets/img/portfolio/P3.1.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Cyberpunk Helmet</h4>
+                <p>Material: PLA+</p>
+                <a href="{% static 'assets/img/portfolio/P3.1.png' %}" title="Details" data-gallery="portfolio-gallery-cosplay" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-fdm">
+              <img src="{% static 'assets/img/portfolio/P1.2.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Voronoi Planter</h4>
+                <p>Material: Matte PLA</p>
+                <a href="{% static 'assets/img/portfolio/P1.2.png' %}" title="Details" data-gallery="portfolio-gallery-fdm" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-resin">
+              <img src="{% static 'assets/img/portfolio/P2.2.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Jewelry Mold</h4>
+                <p>Material: Wax Resin</p>
+                <a href="{% static 'assets/img/portfolio/P2.2.png' %}" title="Details" data-gallery="portfolio-gallery-resin" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-cosplay">
+              <img src="{% static 'assets/img/portfolio/P3.2.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Arm Bracer</h4>
+                <p>Material: ABS</p>
+                <a href="{% static 'assets/img/portfolio/P3.2.png' %}" title="Details" data-gallery="portfolio-gallery-cosplay" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-fdm">
+              <img src="{% static 'assets/img/portfolio/P1.3.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Phone Stand</h4>
+                <p>Material: PETG</p>
+                <a href="{% static 'assets/img/portfolio/P1.3.png' %}" title="Details" data-gallery="portfolio-gallery-fdm" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-resin">
+              <img src="{% static 'assets/img/portfolio/P2.3.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Dental Model</h4>
+                <p>Material: Dental Resin</p>
+                <a href="{% static 'assets/img/portfolio/P2.3.png' %}" title="Details" data-gallery="portfolio-gallery-resin" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-cosplay">
+              <img src="{% static 'assets/img/portfolio/P3.3.png' %}" class="img-fluid" alt="">
+              <div class="portfolio-info">
+                <h4>Sword Hilt</h4>
+                <p>Material: Silk PLA</p>
+                <a href="{% static 'assets/img/portfolio/P3.3.png' %}" title="Details" data-gallery="portfolio-gallery-cosplay" class="glightbox preview-link"><i class="bi bi-zoom-in"></i></a>
+                <a href="#" title="Shop" class="details-link"><i class="bi bi-shop"></i></a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section><section id="clients" class="clients section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-0 clients-wrap">
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C1.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C2.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C3.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C4.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C5.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C6.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C7.png' %}" class="img-fluid" alt=""></div>
+          <div class="col-xl-3 col-md-4 client-logo"><img src="{% static 'assets/img/clients/C8.png' %}" class="img-fluid" alt=""></div>
+        </div>
+      </div>
+    </section></main>
+
+  <footer id="footer" class="footer dark-background">
+
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-4">
+
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="{% url 'home' %}" class="logo d-flex align-items-center"><span class="sitename">PrintVerse</span></a>
+            <div class="footer-contact pt-3">
+              <p>Bridging the gap between digital images and physical reality.</p>
+              <p class="mt-3"><strong>Location:</strong> <span>Tech Hub, Innovation Drive</span></p>
+              <p><strong>Phone:</strong> <span>+1 5589 55488 55</span></p>
+              <p><strong>Email:</strong> <span>support@printverse.com</span></p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Useful Links</h4>
+            <ul>
+              <li><a href="{% url 'home' %}">Home</a></li>
+              <li><a href="#services">Our Services</a></li>
+              <li><a href="#portfolio">Marketplace</a></li>
+              <li><a href="#">Terms of Service</a></li>
+              <li><a href="#">Privacy Policy</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Our Solutions</h4>
+            <ul>
+              <li><a href="#">2D to 3D Conversion</a></li>
+              <li><a href="#">FDM Manufacturing</a></li>
+              <li><a href="#">Resin Printing</a></li>
+              <li><a href="#">Rapid Prototyping</a></li>
+              <li><a href="#">Batch Production</a></li>
+            </ul>
+          </div>
+
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>For Partners</h4>
+            <ul>
+              <li><a href="{% url 'register_shop' %}">Register Your Shop</a></li>
+              <li><a href="{% url 'login' %}">Partner Login</a></li>
+              <li><a href="#">Seller Guidelines</a></li>
+              <li><a href="#">Equipment Verification</a></li>
+              <li><a href="#">Success Stories</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="copyright text-center">
+      <div class="container d-flex flex-column flex-lg-row justify-content-center justify-content-lg-between align-items-center">
+        <div class="d-flex flex-column align-items-center align-items-lg-start">
+          <div>© Copyright <strong><span>PrintVerse</span></strong>. All Rights Reserved</div>
+        </div>
+        <div class="social-links order-first order-lg-last mb-3 mb-lg-0">
+          <a href="#"><i class="bi bi-twitter-x"></i></a>
+          <a href="#"><i class="bi bi-facebook"></i></a>
+          <a href="#"><i class="bi bi-instagram"></i></a>
+          <a href="#"><i class="bi bi-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <div id="preloader">
+    <div></div><div></div><div></div><div></div>
+  </div>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+
+  <script src="{% static 'assets/js/main.js' %}"></script>
+
+</body>
+</html>

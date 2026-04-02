@@ -1,0 +1,1170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>User Home - PrintVerse</title>
+    <meta name="description" content="Convert, Shop, and Track 3D Prints">
+
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lato:wght@400;700;900&family=Raleway:wght@300;400;600;800&display=swap"
+          rel="stylesheet">
+
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+    <style>
+        /* --- Professional Theme Overrides --- */
+        :root {
+            --brand-color: #f03c02;
+            --brand-hover: #d63500;
+            --bg-light: #f4f6f8;
+            --studio-bg: #1b1b1b;
+            --studio-panel: #2a2a2a;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            background-color: var(--bg-light);
+        }
+
+        /* 1. 3D Typography Alignment Fix */
+        .text-3d-logo {
+            font-family: 'Lato', sans-serif;
+            font-weight: 900;
+            font-size: 1.4rem;
+            letter-spacing: -1px;
+            display: inline-flex;
+            align-items: baseline;
+        }
+
+        /* 2. 3D Studio Professional Dark Theme */
+        .studio-card {
+            background-color: var(--studio-bg);
+            border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid #333;
+            overflow: hidden;
+            color: var(--text-light);
+        }
+
+        .studio-header {
+            background: linear-gradient(90deg, #000 0%, #1a1a1a 100%);
+            padding: 15px 25px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .studio-col {
+            padding: 30px;
+            border-right: 1px solid #333;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .studio-col:last-child {
+            border-right: none;
+        }
+
+        .studio-label {
+            color: #888;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        /* Interactive Upload Box */
+        .upload-area {
+            flex-grow: 1;
+            border: 2px dashed #555;
+            border-radius: 8px;
+            background: var(--studio-panel);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--brand-color);
+            background: #333;
+        }
+
+        .upload-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Interactive Viewer Look */
+        .viewer-container {
+            flex-grow: 1;
+            background-color: #000;
+            background-image: linear-gradient(#333 1px, transparent 1px),
+            linear-gradient(90deg, #333 1px, transparent 1px);
+            background-size: 20px 20px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .viewer-controls {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .control-icon {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .control-icon:hover {
+            background: var(--brand-color);
+        }
+
+        /* 3. Shop Cards (UPDATED) */
+        .product-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: transform 0.2s;
+            height: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            overflow: hidden; /* Ensures image fits corners */
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-img {
+            height: 190px;
+            width: 100%;
+            object-fit: cover;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .shop-hidden {
+            display: none;
+        }
+
+        /* 4. Activity Center Refinement */
+        .activity-card {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .nav-tabs-custom {
+            border-bottom: 1px solid #eee;
+            background: #fff;
+            padding: 0 10px;
+        }
+
+        .nav-tabs-custom .nav-link {
+            color: #666;
+            border: none;
+            padding: 15px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .nav-tabs-custom .nav-link.active {
+            color: var(--brand-color);
+            border-bottom: 3px solid var(--brand-color);
+            background: transparent;
+        }
+
+        /* Status Badges */
+        .st-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .st-acc {
+            background: #e6f4ea;
+            color: #1e8e3e;
+        }
+
+        .st-rej {
+            background: #fce8e6;
+            color: #c5221f;
+        }
+
+        .st-pen {
+            background: #fff8e1;
+            color: #b06000;
+        }
+
+    </style>
+</head>
+
+<body class="index-page">
+
+<header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center light-background">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:support@printverse.com">support@printverse.com</a></i>
+            </div>
+            <div class="social-links d-none d-md-flex align-items-center">
+                <span class="text-secondary small">User: <strong>{{ request.user.first_name }} {{ request.user.last_name }}</strong></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="branding d-flex align-items-center">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+                <h1 class="sitename">PrintVerse</h1>
+            </a>
+
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="#studio" class="active">3D Studio</a></li>
+                    <li><a href="#shops">Marketplace</a></li>
+                    <li><a href="#dashboard">My Activity</a></li>
+                    {#                    <li class="dropdown">#}
+                    {#                        <a href="#"><span>Account</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>#}
+                    {#                        <ul>#}
+                    {#                            <li><a href="{% url 'logout' %}" style="color: var(--brand-color);">Logout</a></li>#}
+                    {#                        </ul>#}
+                    {#                    </li>#}
+                    <li class="dropdown">
+                        <a href="#"><span>Account</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="#" data-bs-toggle="modal" data-bs-target="#userProfileModal">My Profile</a>
+                            </li>
+                            <li><a href="{% url 'logout' %}" style="color: var(--brand-color);">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <section id="studio" class="section pt-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-12">
+
+                    <div class="studio-card">
+    <div class="studio-header">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-info-circle me-2 fs-4 text-white"></i>
+            <span class="text-3d-logo text-white">About</span>
+            <span class="ms-2 text-white fw-bold">Our 3D Conversion Studio</span>
+        </div>
+        <span class="badge border border-secondary text-white fw-normal">Powered by Triplane + NeRF</span>
+    </div>
+
+    <div class="row g-3 p-3">
+
+        <!-- About Description -->
+        <div class="col-md-6 studio-col" style="background-color: #222; border-radius: 8px;">
+            <p class="text-white fw-bold fs-6 mb-2">Transform 2D Images into Stunning 3D Models</p>
+            <p class="text-secondary small">
+                Our AI-powered 3D Conversion Studio lets you convert any 2D image into an interactive 3D model in just a few clicks. Perfect for designers, creators, and hobbyists!
+            </p>
+            <ul class="text-secondary small ps-3">
+                <li>Automatic background removal</li>
+                <li>Interactive 3D preview</li>
+                <li>Download in OBJ or GLB</li>
+                <li>Option to 3D print your model</li>
+            </ul>
+            <a href="/gen3d/" class="text-white fw-bold mt-2 d-inline-block" style="text-decoration: underline;">
+                Start Converting Your Image &rarr;
+            </a>
+        </div>
+
+        <!-- Visual / Feature Card -->
+        <div class="col-md-6 studio-col d-flex flex-column justify-content-center align-items-center" style="background-color: #111; border-radius: 8px;">
+            <i class="bi bi-box-seam display-1 text-secondary opacity-25 mb-3"></i>
+            <p class="text-secondary small text-center mb-2">Interactive 3D models render here once converted</p>
+            <div class="d-flex gap-2">
+                <span class="badge bg-secondary">AI Powered</span>
+                <span class="badge bg-secondary">Easy to Use</span>
+                <span class="badge bg-secondary">Fast</span>
+            </div>
+        </div>
+        <div class="p-3 rounded border border-secondary" style="background: transparent;">
+            <p class="small text-white mb-2 fw-bold"><i class="bi bi-shop me-2"></i>Print
+                This Model</p>
+            <button class="btn btn-light btn-sm w-100 fw-bold"
+                    onclick="openRequestModal('', 'Converted_Model_v1.obj')">
+                Send Request to Shop
+            </button>
+       </div>
+
+    </div>
+</div>
+
+
+{#                    <div class="studio-card">#}
+{#                        <div class="studio-header">#}
+{#                            <div class="d-flex align-items-center">#}
+{#                                <i class="bi bi-box-seam me-2 fs-4 text-white"></i>#}
+{#                                <span class="text-3d-logo text-white">3D</span>#}
+{#                                <span class="ms-2 text-white fw-bold">Conversion Studio</span>#}
+{#                            </div>#}
+{#                            <span class="badge border border-secondary text-white fw-normal">Powered by Triplane + NeRF</span>#}
+{#                        </div>#}
+{##}
+{#                        <div class="row g-0">#}
+{##}
+{#                            <div class="col-md-4 studio-col">#}
+{##}
+{#                                <div class="studio-label">1. Source Input</div>#}
+{##}
+{#                                <div class="upload-area mb-3">#}
+{#                                    <i class="bi bi-cloud-arrow-up display-4 text-secondary"></i>#}
+{#                                    <p class="text-secondary small mt-2 mb-0">Click to Upload 2D Image</p>#}
+{#                                    <input type="file" class="upload-input" id="imgInput">#}
+{#                                </div>#}
+{##}
+{#                                <div class="d-flex justify-content-between align-items-center mb-3">#}
+{#                                    <span class="small text-secondary">Remove Background</span>#}
+{#                                    <div class="form-check form-switch">#}
+{#                                        <input class="form-check-input" type="checkbox" checked#}
+{#                                               style="background-color: var(--brand-color); border-color: var(--brand-color);">#}
+{#                                    </div>#}
+{#                                </div>#}
+{##}
+{#                                <button class="btn text-white fw-bold w-100 py-2"#}
+{#                                        style="background-color: var(--brand-color);"#}
+{#                                        onclick="alert('Simulating AI Conversion...')">#}
+{#                                    <i class="bi bi-cpu me-2"></i> Convert to 3D#}
+{#                                </button>#}
+{#                            </div>#}
+{##}
+{#                            <div class="col-md-5 studio-col" style="background-color: #222;">#}
+{#                                <div class="studio-label w-100 d-flex justify-content-between">#}
+{#                                    <span>2. Interactive Viewer</span>#}
+{#                                    <span class="text-secondary"><i class="bi bi-eye me-1"></i> Preview</span>#}
+{#                                </div>#}
+{##}
+{#                                <div class="viewer-container w-100">#}
+{#                                    <div class="text-center">#}
+{#                                        <i class="bi bi-box display-1 text-secondary opacity-25"></i>#}
+{#                                        <p class="small text-secondary mt-2">Model will render here</p>#}
+{#                                    </div>#}
+{#                                    <div class="viewer-controls">#}
+{#                                        <div class="control-icon" title="Rotate"><i class="bi bi-arrow-repeat"></i>#}
+{#                                        </div>#}
+{#                                        <div class="control-icon" title="Zoom In"><i class="bi bi-zoom-in"></i></div>#}
+{#                                        <div class="control-icon" title="Zoom Out"><i class="bi bi-zoom-out"></i></div>#}
+{#                                        <div class="control-icon" title="Wireframe"><i class="bi bi-grid-3x3"></i></div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                            <div class="col-md-3 studio-col">#}
+{#                                <div class="studio-label">3. Output & Actions</div>#}
+{##}
+{#                                <div class="d-flex flex-column gap-3 h-100 justify-content-center">#}
+{#                                    <div class="p-3 rounded" style="background: var(--studio-panel);">#}
+{#                                        <p class="small text-white mb-2 fw-bold"><i class="bi bi-download me-2"></i>Download#}
+{#                                            File</p>#}
+{#                                        <div class="btn-group w-100" role="group">#}
+{#                                            <button class="btn btn-outline-secondary btn-sm">OBJ</button>#}
+{#                                            <button class="btn btn-outline-secondary btn-sm">GLB</button>#}
+{#                                            <button class="btn btn-outline-secondary btn-sm">PLY</button>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{##}
+{#                                    <div class="p-3 rounded border border-secondary" style="background: transparent;">#}
+{#                                        <p class="small text-white mb-2 fw-bold"><i class="bi bi-shop me-2"></i>Print#}
+{#                                            This Model</p>#}
+{#                                        <button class="btn btn-light btn-sm w-100 fw-bold"#}
+{#                                                onclick="openRequestModal('', 'Converted_Model_v1.obj')">#}
+{#                                            Send Request to Shop#}
+{#                                        </button>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{#                    </div>#}
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="shops" class="section">
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold m-0" style="color: #2b2320;">Marketplace</h3>
+            </div>
+
+            <div class="row gy-4" id="shop-grid">
+
+                {% for shop in shops %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="product-card position-relative h-100 d-flex flex-column">
+
+                            <img src="{% static 'assets/img/portfolio/SHOPCARD.png' %}" class="product-img"
+                                 alt="{{ shop.shop_name }}">
+
+                            <div class="p-3 d-flex flex-column flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="fw-bold mb-1 text-dark">{{ shop.shop_name }}</h5>
+
+                                    {% if shop.average_rating %}
+                                        <div class="badge bg-warning text-dark d-flex align-items-center">
+                                            <i class="bi bi-star-fill me-1 small"></i>
+                                            {{ shop.average_rating|floatformat:1 }}
+                                        </div>
+                                    {% else %}
+                                        <span class="badge bg-light text-muted border">New</span>
+                                    {% endif %}
+                                </div>
+
+                                <p class="text-muted small mb-2">{{ shop.place }} • {{ shop.shop_type }}</p>
+
+                                <p class="small mb-3" style="font-size: 0.85rem;">
+                                    {% if shop.average_rating %}
+                                        <span class="text-warning">
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                        <i class="bi bi-star-fill"></i>
+                                            {% if shop.average_rating < 5 %}<i class="bi bi-star-half"></i>{% else %}
+                                                <i class="bi bi-star-fill"></i>{% endif %}
+                                    </span>
+                                        <span class="text-muted ms-1">({{ shop.review_count }} verified reviews)</span>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">No reviews yet</span>
+                                    {% endif %}
+                                </p>
+                                <div class="mt-auto pt-2 border-top">
+                                    <button class="btn btn-sm text-white w-100 fw-bold mt-2"
+                                            style="background-color: var(--brand-color);"
+                                            onclick="openRequestModal('{{ shop.id }}', '{{ shop.shop_name }}')">
+                                        Request Quote
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">No approved shops available at the moment.</p>
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        </div>
+    </section>
+
+    <section id="dashboard" class="section light-background">
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-4" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="section-title mb-3">
+                <h3>My Activity</h3>
+            </div>
+            <div class="activity-card bg-white">
+                <div class="card-header p-0 bg-white">
+                    <ul class="nav nav-tabs nav-tabs-custom" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="orders-tab" data-bs-toggle="tab"
+                                    data-bs-target="#orders">All Orders
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="payments-tab" data-bs-toggle="tab" data-bs-target="#payments">
+                                Payments
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="complaints-tab" data-bs-toggle="tab"
+                                    data-bs-target="#complaints">Sent Complaints
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="feedback-tab" data-bs-toggle="tab" data-bs-target="#feedback">
+                                Sent Feedback
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card-body p-4">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade show active" id="orders">
+                            <table class="table align-middle table-hover">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>File / Request</th>
+                                    <th>Shop</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Quote</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for req in my_requests %}
+                                    <tr>
+                                        <td>
+                                            <span class="fw-bold text-dark">{{ req.model_file.name }}</span><br>
+
+                                            {% if req.status == 'Rejected' %}
+                                                <small class="text-danger fst-italic">{{ req.description }}</small>
+                                            {% else %}
+                                                <small class="text-muted">{{ req.description|truncatechars:20 }}</small>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ req.SHOP.shop_name }}</td>
+                                        <td class="small text-muted">{{ req.created_at|date:"M d, Y" }}</td>
+
+                                        <td>
+                                            {% if req.status == 'Pending' %}
+                                                <span class="st-badge st-pen">Pending</span>
+                                            {% elif req.status == 'Accepted' %}
+                                                <span class="st-badge st-acc">Quote Ready</span>
+                                            {% elif req.status == 'Delivered' %}
+                                                <span class="badge bg-dark">Delivered</span>
+                                            {% else %}
+                                                <span class="st-badge bg-light text-dark">{{ req.status }}</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="fw-bold text-success">
+                                            {% if req.status == 'Accepted' %}
+                                                ${{ req.amount }}
+                                                <button class="btn btn-sm btn-success ms-2 py-0"
+                                                        onclick="openPaymentModal('{{ req.id }}', '{{ req.amount }}')">
+                                                    Pay
+                                                </button>
+
+                                            {% elif req.status == 'Paid' or req.status == 'Printing' or req.status == 'Dispatched' %}
+                                                <span class="text-success">${{ req.amount }}</span>
+                                                <i class="bi bi-check-circle-fill small ms-1" title="Paid"></i>
+
+                                            {% elif req.status == 'Delivered' %}
+                                                {% if req.rating_set.exists %}
+                                                    <span class="text-warning small"><i class="bi bi-star-fill"></i> Rated</span>
+                                                {% else %}
+                                                    <button class="btn btn-sm btn-warning text-dark fw-bold py-0"
+                                                            onclick="openRateModal('{{ req.id }}', '{{ req.model_file.name }}')">
+                                                        <i class="bi bi-star"></i> Rate
+                                                    </button>
+                                                {% endif %}
+
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">You haven't sent any print
+                                            requests yet.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="payments">
+                            <table class="table align-middle table-hover">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>Txn ID</th>
+                                    <th>Item</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for p in payments %}
+                                    <tr>
+                                        <td class="fw-bold text-secondary">#PAY-{{ p.id }}</td>
+
+                                        <td class="small text-dark">{{ p.REQUEST.model_file.name }}</td>
+
+                                        <td class="text-success fw-bold">${{ p.amount }}</td>
+
+                                        <td class="small text-muted">{{ p.payment_date|date:"M d, Y" }}</td>
+
+                                        <td>
+                    <span class="badge bg-success bg-opacity-10 text-success border border-success">
+                        <i class="bi bi-check-circle-fill me-1"></i>{{ p.status }}
+                    </span>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4 text-muted">
+                                            <i class="bi bi-wallet2 display-6 d-block mb-2 opacity-25"></i>
+                                            No payment history found.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="complaints">
+                            <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-3 rounded border">
+                                <div>
+                                    <h6 class="fw-bold m-0 text-dark">Complaint History</h6>
+                                    <small class="text-muted">Track status and view admin replies</small>
+                                </div>
+                                <a href="{% url 'user_sent_complaint' %}" class="btn btn-sm text-white fw-bold"
+                                   style="background-color: #f03c02;">
+                                    <i class="bi bi-plus-lg me-1"></i> Raise New Ticket
+                                </a>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th style="width: 10%;">ID</th>
+                                        <th style="width: 25%;">Title</th>
+                                        <th style="width: 15%;">Date</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 15%;">Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for c in complaints %}
+                                        <tr>
+                                            <td class="fw-bold text-secondary">#{{ c.id }}</td>
+                                            <td>{{ c.title }}</td>
+                                            <td class="small text-muted">{{ c.date|date:"M d, Y" }}</td>
+                                            <td>
+                                                {% if c.reply %}
+                                                    <span class="badge bg-success bg-opacity-10 text-success border border-success">Resolved</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning text-dark">Pending</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-dark"
+                                                        onclick="openViewReplyModal('{{ c.title|escapejs }}', '{{ c.description|escapejs }}', '{{ c.reply|default:'Waiting for admin response...'|escapejs }}')">
+                                                    <i class="bi bi-eye"></i> View Reply
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center py-4 text-muted">
+                                                No complaints found.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="feedback">
+                            <div class="d-flex justify-content-between align-items-center mb-4 bg-light p-3 rounded border">
+                                <div>
+                                    <h6 class="fw-bold m-0 text-dark">Feedback History</h6>
+                                    <small class="text-muted">Reviews you have submitted</small>
+                                </div>
+                                <a href="{% url 'user_sent_feedback' %}" class="btn btn-sm text-white fw-bold"
+                                   style="background-color: #f03c02;">
+                                    <i class="bi bi-star me-1"></i> Give Feedback
+                                </a>
+                            </div>
+
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover align-middle">
+                                    <thead class="table-light">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Rating</th>
+                                        <th>Comment</th>
+                                        <th>Date</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for f in feedbacks %}
+                                        <tr>
+                                            <td class="fw-bold text-secondary">#{{ f.id }}</td>
+                                            <td class="text-warning fw-bold">
+                                                {{ f.rating }} <span class="text-muted small">/ 5</span>
+                                            </td>
+                                            <td>{{ f.description }}</td>
+                                            <td class="small text-muted">{{ f.date|date:"M d, Y" }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="4" class="text-center py-4 text-muted">
+                                                No feedback submitted yet.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</main>
+
+{% include 'footer.html' %}
+
+<a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+        class="bi bi-arrow-up-short"></i></a>
+
+<div class="modal fade" id="requestModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--brand-color);">
+                <h5 class="modal-title text-white fw-bold"><i class="bi bi-send-check me-2"></i>Send Print Request</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{% url 'submit_print_request' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label text-uppercase small fw-bold text-secondary">Select Print Shop</label>
+                        <select class="form-select" name="shop_select" id="modalShopSelect" required>
+                            <option value="" disabled selected>Choose a shop...</option>
+                            {% for shop in shops %}
+                                <option value="{{ shop.id }}">{{ shop.shop_name }} ({{ shop.place }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-uppercase small fw-bold text-secondary">Upload 3D Model (.obj /
+                            .stl)</label>
+                        <input type="file" class="form-control" name="model_file" required>
+                        <div class="form-text small">Max file size: 50MB</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-uppercase small fw-bold text-secondary">Notes /
+                            Requirements</label>
+                        <textarea class="form-control" name="description" rows="3"
+                                  placeholder="E.g., White PLA, 20% Infill, High Quality..."></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-uppercase small fw-bold text-secondary">Delivery Address <span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control" name="delivery_address" rows="2"
+                                  placeholder="House Name, Street, District, Pincode" required></textarea>
+                        <div class="form-text small"><i class="bi bi-lock-fill"></i> Private. Visible only to the Shop.
+                        </div>
+                    </div>
+
+                    <div class="mt-4 d-grid">
+                        <button type="submit" class="btn text-white fw-bold py-2"
+                                style="background: var(--brand-color);">Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+<script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+<script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+<script>
+    function openRequestModal(shopId, shopName) {
+        const select = document.getElementById('modalShopSelect');
+
+        if (shopId) {
+            // --- CASE 1: MARKETPLACE CARD CLICKED ---
+            // 1. Set the specific shop
+            select.value = shopId;
+
+            // 2. LOCK the dropdown so they can't change it
+            // We use pointer-events: none to prevent clicking,
+            // and change the background to look "disabled"
+            select.style.pointerEvents = 'none';
+            select.style.backgroundColor = '#e9ecef'; // Light gray (Bootstrap disabled color)
+
+        } else {
+            // --- CASE 2: STUDIO BUTTON CLICKED ---
+            // 1. Reset to blank/default
+            select.value = "";
+
+            // 2. UNLOCK the dropdown so they can choose anyone
+            select.style.pointerEvents = 'auto';
+            select.style.backgroundColor = '#fff'; // White background
+        }
+
+        // Show the modal
+        new bootstrap.Modal(document.getElementById('requestModal')).show();
+    }
+</script>
+
+<div class="modal fade" id="viewReplyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Complaint Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="small text-muted fw-bold text-uppercase">Subject</label>
+                    <p class="fw-bold mb-0 text-dark" id="modalComplaintTitle">...</p>
+                </div>
+
+                <div class="mb-3 bg-light p-3 rounded border">
+                    <label class="small text-muted fw-bold text-uppercase mb-1">Description</label>
+                    <p class="small text-dark mb-0" id="modalComplaintDesc">...</p>
+                </div>
+
+                <div class="mb-2">
+                    <label class="small text-success fw-bold text-uppercase mb-1">
+                        <i class="bi bi-arrow-return-right me-1"></i> Response
+                    </label>
+                    <div class="p-3 border border-success rounded bg-success bg-opacity-10">
+                        <p class="small text-dark mb-0" id="modalComplaintReply"
+                           style="white-space: pre-wrap; font-family: monospace;">...</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openViewReplyModal(title, desc, reply) {
+        document.getElementById('modalComplaintTitle').innerText = title;
+        document.getElementById('modalComplaintDesc').innerText = desc;
+        document.getElementById('modalComplaintReply').innerText = reply;
+        new bootstrap.Modal(document.getElementById('viewReplyModal')).show();
+    }
+</script>
+
+
+<div class="modal fade" id="paymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-shield-lock-fill me-2"></i>Secure Checkout</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{% url 'process_payment' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="req_id" id="payReqId">
+
+                    <div class="text-center mb-4 pt-2">
+                        <small class="text-uppercase text-muted fw-bold" style="letter-spacing: 1px;">Total Amount</small>
+                        <h2 class="fw-bold text-dark mb-0">$<span id="payAmountDisplay">0.00</span></h2>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-secondary">Card Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-credit-card"></i></span>
+                            <input type="text" class="form-control border-start-0 ps-0"
+                                   name="card_number"
+                                   id="inputCardNumber"
+                                   placeholder="0000 0000 0000 0000"
+                                   maxlength="19"
+                                   required>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-secondary">Expiry Date</label>
+                            <input type="text" class="form-control text-center"
+                                   name="expiry"
+                                   id="inputExpiry"
+                                   placeholder="MM / YY"
+                                   maxlength="7"
+                                   required>
+                        </div>
+
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-secondary">CVV</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control text-center border-end-0"
+                                       name="cvv"
+                                       id="inputCVV"
+                                       placeholder="123"
+                                       maxlength="3"
+                                       required>
+                                <span class="input-group-text bg-white text-muted border-start-0"><i class="bi bi-question-circle"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success fw-bold py-2 shadow-sm">
+                            Pay Now
+                        </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <small class="text-muted" style="font-size: 0.75rem;">
+                            <i class="bi bi-lock-fill text-success me-1"></i> 256-bit SSL Encrypted Connection
+                        </small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="rateModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-dark fw-bold">Rate Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{% url 'submit_product_rating' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="req_id" id="rateReqId">
+
+                    <p class="text-muted small">Item: <strong id="rateItemName">...</strong></p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Rating</label>
+                        <select name="rating" class="form-select">
+                            <option value="5">★★★★★ (Excellent)</option>
+                            <option value="4">★★★★☆ (Good)</option>
+                            <option value="3">★★★☆☆ (Average)</option>
+                            <option value="2">★★☆☆☆ (Poor)</option>
+                            <option value="1">★☆☆☆☆ (Bad)</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold small">Review</label>
+                        <textarea name="description" class="form-control" rows="3"
+                                  placeholder="How was the print quality?" required></textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-dark">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openRateModal(reqId, itemName) {
+        document.getElementById('rateReqId').value = reqId;
+        document.getElementById('rateItemName').innerText = itemName;
+        new bootstrap.Modal(document.getElementById('rateModal')).show();
+    }
+</script>
+
+
+<div class="modal fade" id="userProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form action="{% url 'update_user_profile' %}" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="small text-muted fw-bold">First Name</label>
+                            <input type="text" class="form-control" name="first_name"
+                                   value="{{ request.user.first_name }}">
+                        </div>
+                        <div class="col">
+                            <label class="small text-muted fw-bold">Last Name</label>
+                            <input type="text" class="form-control" name="last_name"
+                                   value="{{ request.user.last_name }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">Email</label>
+                        <input type="email" class="form-control" name="email" value="{{ request.user.email }}" readonly
+                               style="background-color: #e9ecef;">
+                        <div class="form-text small text-muted">Contact support to change email.</div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="small text-muted fw-bold">Phone</label>
+                            <input type="text" class="form-control" name="phone"
+                                   value="{{ request.user.userprofile.phone }}">
+                        </div>
+                        <div class="col">
+                            <label class="small text-muted fw-bold">City</label>
+                            <input type="text" class="form-control" name="city"
+                                   value="{{ request.user.userprofile.place }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small text-muted fw-bold">Role / Interest</label>
+                        <select class="form-select" name="user_type">
+                            <option value="Hobbyist Maker" {% if request.user.userprofile.user_type_interest == 'Hobbyist Maker' %}selected{% endif %}>Hobby Projects (DIY, Making)</option>
+                            <option value="Gift Buyer" {% if request.user.userprofile.user_type_interest == 'Gift Buyer' %}selected{% endif %}>Unique Gifts</option>
+                            <option value="Home Organizer" {% if request.user.userprofile.user_type_interest == 'Home Organizer' %}selected{% endif %}>Home Organization</option>
+                            <option value="Fashion Enthusiast" {% if request.user.userprofile.user_type_interest == 'Fashion Enthusiast' %}selected{% endif %}>Fashion & Accessories</option>
+                            <option value="Gaming Enthusiast" {% if request.user.userprofile.user_type_interest == 'Gaming Enthusiast' %}selected{% endif %}>Gaming & Collectibles</option>
+                            <option value="Cosplay/Costume Creator" {% if request.user.userprofile.user_type_interest == 'Cosplay/Costume Creator' %}selected{% endif %}>Cosplay & Props</option>
+                            <option value="Small Business Owner" {% if request.user.userprofile.user_type_interest == 'Small Business Owner' %}selected{% endif %}>Business Prototypes</option>
+                            <option value="Educational Institutions" {% if request.user.userprofile.user_type_interest == 'Educational Institutions' %}selected{% endif %}>Education / STEM</option>
+                            <option value="Model Collector" {% if request.user.userprofile.user_type_interest == 'Model Collector' %}selected{% endif %}>Model Collection</option>
+                            <option value="Artist/Designer" {% if request.user.userprofile.user_type_interest == 'Artist/Designer' %}selected{% endif %}>Art & Design</option>
+                            <option value="Other" {% if request.user.userprofile.user_type_interest == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn text-white fw-bold" style="background: var(--brand-color);">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    // 1. FUNCTION TO OPEN THE MODAL (The "Switch")
+    function openPaymentModal(reqId, amount) {
+        document.getElementById('payReqId').value = reqId;
+        document.getElementById('payAmountDisplay').innerText = amount;
+        new bootstrap.Modal(document.getElementById('paymentModal')).show();
+    }
+
+    // ============================================================
+    // 2. PROFESSIONAL INPUT FORMATTING (The "Logic")
+    // ============================================================
+
+    // A. Auto-Format Expiry Date (MM / YY)
+    const expiryInput = document.getElementById('inputExpiry');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', function (e) {
+            let input = e.target.value.replace(/\D/g, ''); // Numbers only
+            if (input.length > 4) input = input.substring(0, 4); // Max 4 digits
+
+            if (input.length > 2) {
+                e.target.value = input.substring(0, 2) + ' / ' + input.substring(2);
+            } else {
+                e.target.value = input;
+            }
+        });
+    }
+
+    // B. Auto-Space Card Number (0000 0000 0000 0000)
+    const cardInput = document.getElementById('inputCardNumber');
+    if (cardInput) {
+        cardInput.addEventListener('input', function (e) {
+            let input = e.target.value.replace(/\D/g, ''); // Numbers only
+            e.target.value = input.replace(/(\d{4})(?=\d)/g, '$1 ').trim();
+        });
+    }
+
+    // C. CVV (Numbers Only)
+    const cvvInput = document.getElementById('inputCVV');
+    if (cvvInput) {
+        cvvInput.addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+    }
+</script>
+
+
+
+{#      ROLLBACK START#}
+
+{#      ROLLBACK STOP#}
+
+</body>
+</html>

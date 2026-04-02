@@ -1,0 +1,129 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Complaints - Shop Portal</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background-color: #f8f9fa; padding: 20px; }
+        .page-header { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .table-card { background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .btn-brand { background-color: #f03c02; color: white; border: none; }
+        .btn-brand:hover { background-color: #d63500; color: white; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center page-header">
+            <div>
+                <h4 class="fw-bold mb-1">Customer Complaints</h4>
+                <p class="text-muted small mb-0">Manage issues raised by users regarding their orders.</p>
+            </div>
+            <a href="{% url 'shop_home' %}" class="btn btn-outline-dark btn-sm">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <div class="table-card p-3">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Issue Title</th>
+                            <th>Description</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in received_complaints %}
+                        <tr>
+                            <td class="fw-bold text-secondary">#{{ c.id }}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-light rounded-circle p-2 me-2 text-center" style="width: 35px; height: 35px;">
+                                        <i class="fas fa-user text-secondary"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold small">{{ c.USER.username }}</div>
+                                        <div class="text-muted" style="font-size: 0.75rem;">{{ c.USER.email }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-bold text-dark">{{ c.title }}</td>
+                            <td><small class="text-muted">{{ c.description|truncatechars:50 }}</small></td>
+                            <td class="small text-muted">{{ c.date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if c.status == 'Resolved' %}
+                                    <span class="badge bg-success">Resolved</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-brand"
+                                        onclick="openReplyModal('{{ c.id }}', '{{ c.USER.username|escapejs }}', '{{ c.description|escapejs }}', '{{ c.reply|default:''|escapejs }}')">
+                                    <i class="fas fa-reply"></i> Reply
+                                </button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">No customer complaints found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="replyModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Reply to Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="{% url 'reply_customer_complaint' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="complaint_id" id="modal_complaint_id">
+
+                    <div class="modal-body">
+                        <div class="mb-3 p-3 bg-light rounded">
+                            <label class="small text-muted fw-bold">CUSTOMER ISSUE:</label>
+                            <p class="small text-dark mb-0 fst-italic" id="modal_issue_desc">...</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Your Response</label>
+                            <textarea name="reply_text" id="modal_reply_text" class="form-control" rows="4" placeholder="Type your solution here..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-brand btn-sm">Send Reply</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script>
+        function openReplyModal(id, user, desc, existingReply) {
+            document.getElementById('modal_complaint_id').value = id;
+            document.getElementById('modal_issue_desc').innerText = desc;
+            document.getElementById('modal_reply_text').value = existingReply;
+            new bootstrap.Modal(document.getElementById('replyModal')).show();
+        }
+    </script>
+</body>
+</html>

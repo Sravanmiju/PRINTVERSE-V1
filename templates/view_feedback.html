@@ -1,0 +1,119 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Reviews - Admin</title>
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .table-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .rating-badge {
+            background: #fff8e1;
+            color: #ff8f00;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            border: 1px solid #ffe082;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark m-0">Feedback & Reviews</h2>
+        <a href="{% url 'admin_home' %}" class="btn btn-dark btn-sm px-4">Back to Dashboard</a>
+    </div>
+
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 5%">ID</th>
+                    <th style="width: 20%">FROM (Sender)</th>
+                    <th style="width: 20%">TO (Target)</th>
+                    <th style="width: 10%">Rating</th>
+                    <th style="width: 30%">Comment</th>
+                    <th style="width: 15%">Date</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for item in reviews %}
+                    <tr>
+                        <td class="text-secondary fw-bold">
+                            {% if item.REQUEST %} #RT-{{ item.id }} {% else %} #FB-{{ item.id }} {% endif %}
+                        </td>
+
+                        <td>
+                            {% if item.REQUEST %}
+                                <span class="badge bg-primary mb-1">CUSTOMER</span><br>
+                                <span class="fw-bold text-dark">{{ item.REQUEST.USER.USER.username }}</span>
+                            {% else %}
+                                {% if item.USER.shop %}
+                                    <span class="badge bg-dark mb-1">SHOP PARTNER</span><br>
+                                    <span class="fw-bold text-dark">{{ item.USER.shop.shop_name }}</span>
+                                {% else %}
+                                    <span class="badge bg-primary mb-1">CUSTOMER</span><br>
+                                    <span class="fw-bold text-dark">{{ item.USER.username }}</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {% if item.REQUEST %}
+                                <span class="badge bg-warning text-dark mb-1">PRODUCT REVIEW</span><br>
+                                <strong class="text-dark">{{ item.REQUEST.SHOP.shop_name }}</strong><br>
+                                <small class="text-muted">Item: {{ item.REQUEST.model_file.name }}</small>
+                            {% else %}
+                                {% if item.SHOP %}
+                                    <span class="badge bg-warning text-dark mb-1">SHOP REVIEW</span><br>
+                                    <strong class="text-dark">{{ item.SHOP.shop_name }}</strong>
+                                {% else %}
+                                    <span class="badge bg-secondary mb-1">PLATFORM FEEDBACK</span><br>
+                                    <span class="text-muted small">To Admin</span>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            <div class="rating-badge d-inline-block">
+                                {{ item.rating }} <i class="fas fa-star"></i>
+                            </div>
+                        </td>
+
+                        <td>
+                            <p class="mb-0 text-muted small fst-italic">"{{ item.description }}"</p>
+                        </td>
+
+                        <td class="small text-muted">{{ item.date|date:"M d, Y" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">No feedback or ratings found.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

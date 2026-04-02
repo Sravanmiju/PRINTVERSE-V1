@@ -1,0 +1,685 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Register Shop - PrintVerse</title>
+
+    <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+    <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Lato:wght@400;700&display=swap"
+          rel="stylesheet">
+
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+    <style>
+        .register-section {
+            padding: 60px 0;
+            background-color: #f9f9f9;
+            min-height: 80vh;
+        }
+
+        .register-card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            padding: 40px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h3 {
+            font-weight: 700;
+            color: #2b2320;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #f03c02;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin: 25px 0 15px 0;
+        }
+
+        .btn-register {
+            background: #f03c02;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-register:hover {
+            background: #d63500;
+            color: #fff;
+        }
+
+        .login-redirect {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .login-redirect a {
+            color: #f03c02;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* =========================================
+           FORM VALIDATION STYLES (Add to existing <style> block)
+           ========================================= */
+
+        /* 1. Hide Error Text by Default */
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.85em;
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        /* 2. Show Error Text when Input is Invalid */
+        .is-invalid ~ .invalid-feedback,
+        .form-control.is-invalid ~ .invalid-feedback,
+        .input-group > .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+
+        /* 3. Red Border & Icon for Invalid Fields */
+        .form-control.is-invalid,
+        .form-select.is-invalid {
+            border-color: #dc3545 !important;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5zM6 8.2a.6.6 0 110-1.2.6.6 0 010 1.2z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+
+        /* 4. Focus State for Invalid Fields */
+        .form-control.is-invalid:focus,
+        .form-select.is-invalid:focus {
+            border-color: #dc3545 !important;
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        /* 5. Fix for Input Groups (Password Eye Icon) */
+        .input-group .form-control.is-invalid {
+            z-index: 2; /* Keeps border on top */
+        }
+
+        /* Ensure the toggle icon doesn't overlap the error icon */
+        .input-group-text {
+            border-left: 0;
+        }
+
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.85em;
+            color: #dc3545;
+            font-weight: 600;
+        }
+
+        .is-invalid ~ .invalid-feedback,
+        .input-group > .form-control.is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+
+        .form-control.is-invalid, .form-select.is-invalid {
+            border-color: #dc3545 !important;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5zM6 8.2a.6.6 0 110-1.2.6.6 0 010 1.2z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+    </style>
+</head>
+
+<body class="index-page">
+
+<header id="header" class="header sticky-top">
+    <div class="topbar d-flex align-items-center light-background">
+        <div class="container d-flex justify-content-center justify-content-md-between">
+            <div class="contact-info d-flex align-items-center">
+                <i class="bi bi-envelope d-flex align-items-center"><a href="mailto:support@printverse.com">support@printverse.com</a></i>
+                <i class="bi bi-phone d-flex align-items-center ms-4"><span>+1 5589 55488 55</span></i>
+            </div>
+            <div class="social-links d-none d-md-flex align-items-center">
+                <a href="#" class="twitter"><i class="bi bi-twitter-x"></i></a>
+                <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="branding d-flex align-items-center">
+        <div class="container position-relative d-flex align-items-center justify-content-between">
+            <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+                <h1 class="sitename">PrintVerse</h1>
+            </a>
+            <nav id="navmenu" class="navmenu">
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="{% url 'home' %}#services">Services</a></li>
+                    <li><a href="{% url 'home' %}#portfolio">Marketplace</a></li>
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="active"><span>Register</span> <i
+                                class="bi bi-chevron-down toggle-dropdown"></i></a>
+                        <ul>
+                            <li><a href="{% url 'register_shop' %}" class="active">Shop</a></li>
+                            <li><a href="{% url 'register_user' %}">User</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{% url 'home' %}#footer">Contact</a></li>
+                </ul>
+                <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+            </nav>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+    <section class="register-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <div class="register-card">
+                        <div class="form-header">
+                            <h3>Register Your Print Shop</h3>
+                            <p class="text-muted">Start accepting 3D printing orders today.</p>
+                        </div>
+
+{#                    ROLLBACK#}
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-danger text-center fw-bold" role="alert">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+{#                    ROLLBACK#}
+                        <form action="" method="POST" enctype="multipart/form-data" id="shopForm" novalidate>
+                            {% csrf_token %}
+
+                            <div class="form-section-title">Account Details</div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Shop Username</label>
+                                    <input type="text" class="form-control" name="username" id="shopUsername" required>
+                                    <div class="invalid-feedback">Username cannot contain spaces.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Password</label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" name="password" id="shopPassword"
+                                               required>
+                                        <span class="input-group-text bg-white"
+                                              onclick="togglePassword('shopPassword', 'toggleIconShop')"
+                                              style="cursor: pointer;">
+                    <i class="bi bi-eye" id="toggleIconShop"></i>
+                </span>
+                                        <div class="invalid-feedback">Must be 8+ chars with a special symbol.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">Shop Information</div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Shop Name</label>
+                                    <input type="text" class="form-control" name="shop_name" id="shopName" required>
+                                    <div class="invalid-feedback">Shop Name is required.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Owner Name</label>
+                                    <input type="text" class="form-control" name="owner_name" id="ownerName" required>
+                                    <div class="invalid-feedback">Owner Name is required.</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Business Email</label>
+                                    <input type="email" class="form-control" name="email" id="shopEmail" required>
+                                    <div class="invalid-feedback">Please enter a valid email address.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="tel" class="form-control" name="phone" id="shopPhone" required>
+                                    <div class="invalid-feedback">Digits only (no spaces/dashes).</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Shop Type / Category</label>
+                                <select class="form-select" name="shop_type" id="shopType" required>
+                                    <option value="" selected disabled>Select Category...</option>
+                                    {% for category in categories %}
+                                        <option value="{{ category.category_name }}">{{ category.category_name }}</option>
+                                    {% empty %}
+                                        <option disabled>No categories available</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="invalid-feedback">Please select a category.</div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Equipment Type (e.g., FDM, Resin)</label>
+                                    <input type="text" class="form-control" name="equipment" id="shopEq"
+                                           placeholder="E.g. Prusa i3, Elegoo Mars" required>
+                                    <div class="invalid-feedback">List your equipment.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Materials Offered</label>
+                                    <input type="text" class="form-control" name="materials" id="shopMat"
+                                           placeholder="E.g. PLA, PETG, ABS, Resin" required>
+                                    <div class="invalid-feedback">List your materials.</div>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">City / Location</label>
+                                    <input type="text" class="form-control" name="city" id="shopCity" required>
+                                    <div class="invalid-feedback">Location is required.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Approx. Turnaround Time (Days)</label>
+                                    <input type="number" class="form-control" name="turnaround" placeholder="3">
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">Verification Documents</div>
+                            <div class="mb-3">
+                                <label for="shop-proof-type" class="form-label">Proof Type</label>
+                                <select class="form-select" name="proof_type" id="shopProofType" required>
+                                    <option value="" selected disabled>Select Proof</option>
+                                    <option value="GST">GST Certificate</option>
+                                    <option value="License">Business License</option>
+                                    <option value="PAN">PAN Card</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <div class="invalid-feedback">Select a proof type.</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="shop-proof-file" class="form-label">Attach Proof File</label>
+                                <input type="file" class="form-control" name="proof_file" id="shopProofFile" required>
+                                <div class="invalid-feedback">Proof document is required.</div>
+                                <div class="form-text">Upload PDF, JPG, or PNG (Max 5MB). This is used for verification
+                                    only.
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-register">Submit Registration</button>
+                        </form>
+
+                        <div class="login-redirect">
+                            Already have a partner account? <a href="{% url 'login' %}">Login here</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+{% include 'footer.html' %}
+
+<script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'assets/js/main.js' %}"></script>
+
+{#<script>#}
+{#    function togglePassword() {#}
+{#        const passwordInput = document.getElementById('passwordInput');#}
+{#        const toggleIcon = document.getElementById('toggleIcon');#}
+{##}
+{#        if (passwordInput.type === 'password') {#}
+{#            passwordInput.type = 'text';#}
+{#            toggleIcon.classList.remove('bi-eye');#}
+{#            toggleIcon.classList.add('bi-eye-slash');#}
+{#        } else {#}
+{#            passwordInput.type = 'password';#}
+{#            toggleIcon.classList.remove('bi-eye-slash');#}
+{#            toggleIcon.classList.add('bi-eye');#}
+{#        }#}
+{#    }#}
+{#</script>#}
+
+
+{#<script>#}
+{#    function togglePassword(inputId, iconId) {#}
+{#        const input = document.getElementById(inputId);#}
+{#        const icon = document.getElementById(iconId);#}
+{#        if (input.type === "password") {#}
+{#            input.type = "text";#}
+{#            icon.classList.remove("bi-eye");#}
+{#            icon.classList.add("bi-eye-slash");#}
+{#        } else {#}
+{#            input.type = "password";#}
+{#            icon.classList.remove("bi-eye-slash");#}
+{#            icon.classList.add("bi-eye");#}
+{#        }#}
+{#    }#}
+{##}
+{#    document.getElementById('shopForm').addEventListener('submit', function (event) {#}
+{#        let isValid = true;#}
+{##}
+{#        // Helper function#}
+{#        function setInvalid(element, message) {#}
+{#            element.classList.add('is-invalid');#}
+{#            let feedback = element.nextElementSibling;#}
+{#            if (feedback && feedback.classList.contains('invalid-feedback')) {#}
+{#                feedback.innerText = message;#}
+{#            }#}
+{#            isValid = false;#}
+{#        }#}
+{##}
+{#        function setValid(element) {#}
+{#            element.classList.remove('is-invalid');#}
+{#            element.classList.add('is-valid');#}
+{#        }#}
+{##}
+{#        // 1. Validate Text Fields & Dropdowns#}
+{#        // This ensures the user selected a category (fixes the crash)#}
+{#        const requiredIds = ['shopName', 'ownerName', 'shopEmail', 'shopPhone', 'shopType', 'shopEq', 'shopMat', 'shopCity', 'shopProofType'];#}
+{##}
+{#        requiredIds.forEach(id = > {#}
+{#            const el = document.getElementById(id);#}
+{#        if (!el || !el.value.trim()) {#}
+{#            if (el) setInvalid(el, "This field is required.");#}
+{#        } else {#}
+{#            setValid(el);#}
+{#        }#}
+{#    })#}
+{#        ;#}
+{##}
+{#        // 2. Username (No Spaces)#}
+{#        const user = document.getElementById('shopUsername');#}
+{#        if (!user.value.trim()) {#}
+{#            setInvalid(user, "Username is required.");#}
+{#        } else if (/\s/.test(user.value)) {#}
+{#            setInvalid(user, "Username cannot contain spaces.");#}
+{#        } else {#}
+{#            setValid(user);#}
+{#        }#}
+{##}
+{#        // 3. Password (Strength)#}
+{#        const pw = document.getElementById('shopPassword');#}
+{#        const pwRegex = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;#}
+{#        if (!pwRegex.test(pw.value)) {#}
+{#            setInvalid(pw, "Password must be 8+ chars & 1 special symbol.");#}
+{#        } else {#}
+{#            setValid(pw);#}
+{#        }#}
+{##}
+{#        // 4. File Attachment Check#}
+{#        const fileInput = document.getElementById('shopProofFile');#}
+{#        if (!fileInput.files || fileInput.files.length === 0) {#}
+{#            setInvalid(fileInput, "You must attach a proof document.");#}
+{#        } else {#}
+{#            setValid(fileInput);#}
+{#        }#}
+{##}
+{#        // STOP if Invalid#}
+{#        if (!isValid) {#}
+{#            event.preventDefault();#}
+{#            event.stopPropagation();#}
+{#            // Scroll to error#}
+{#            const err = document.querySelector('.is-invalid');#}
+{#            if (err) err.scrollIntoView({behavior: 'smooth', block: 'center'});#}
+{#        }#}
+{#    });#}
+{#</script>#}
+<script>
+    // Toggle Password Visibility
+    function togglePassword(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi-eye");
+            icon.classList.add("bi-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi-eye-slash");
+            icon.classList.add("bi-eye");
+        }
+    }
+
+{#    // Form Validation Logic#}
+{#    document.getElementById('shopForm').addEventListener('submit', function (event) {#}
+{#        let isValid = true;#}
+{##}
+{#        // Helper function to show error#}
+{#        function setInvalid(element, message) {#}
+{#            element.classList.add('is-invalid');#}
+{#            element.classList.remove('is-valid');#}
+{##}
+{#            // Find the immediate next invalid-feedback div#}
+{#            let feedback = element.parentElement.querySelector('.invalid-feedback');#}
+{#            // If not found (sometimes it's outside input-group), check sibling#}
+{#            if (!feedback) feedback = element.nextElementSibling;#}
+{##}
+{#            if (feedback && feedback.classList.contains('invalid-feedback')) {#}
+{#                feedback.innerText = message;#}
+{#                feedback.style.display = 'block';#}
+{#            }#}
+{#            isValid = false;#}
+{#        }#}
+{##}
+{#        // Helper function to clear error#}
+{#        function setValid(element) {#}
+{#            element.classList.remove('is-invalid');#}
+{#            element.classList.add('is-valid');#}
+{##}
+{#            let feedback = element.parentElement.querySelector('.invalid-feedback');#}
+{#            if (!feedback) feedback = element.nextElementSibling;#}
+{##}
+{#            if (feedback) feedback.style.display = 'none';#}
+{#        }#}
+{##}
+{#        // 1. Validate Required Fields (Text & Selects)#}
+{#        const requiredIds = ['shopName', 'ownerName', 'shopEmail', 'shopPhone', 'shopType', 'shopEq', 'shopMat', 'shopCity', 'shopProofType'];#}
+{##}
+{#        // FIXED SYNTAX ERROR HERE (Removed space in arrow function)#}
+{#        requiredIds.forEach(id => {#}
+{#            const el = document.getElementById(id);#}
+{#            if (!el || !el.value.trim()) {#}
+{#                if (el) setInvalid(el, "This field is required.");#}
+{#            } else {#}
+{#                setValid(el);#}
+{#            }#}
+{#        });#}
+{##}
+{#        // 2. Username (No Spaces)#}
+{#        const user = document.getElementById('shopUsername');#}
+{#        if (!user.value.trim()) {#}
+{#            setInvalid(user, "Username is required.");#}
+{#        } else if (/\s/.test(user.value)) {#}
+{#            setInvalid(user, "Username cannot contain spaces.");#}
+{#        } else {#}
+{#            setValid(user);#}
+{#        }#}
+{##}
+{#        // 3. Password (Strength)#}
+{#        const pw = document.getElementById('shopPassword');#}
+{#        // Regex: At least 8 chars, one special char#}
+{#        const pwRegex = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;#}
+{##}
+{#        if (!pw.value) {#}
+{#             setInvalid(pw, "Password is required.");#}
+{#        } else if (!pwRegex.test(pw.value)) {#}
+{#            setInvalid(pw, "Must be 8+ chars & 1 special symbol.");#}
+{#        } else {#}
+{#            setValid(pw);#}
+{#        }#}
+{##}
+{#        // 4. File Attachment Check#}
+{#        const fileInput = document.getElementById('shopProofFile');#}
+{#        if (!fileInput.files || fileInput.files.length === 0) {#}
+{#            setInvalid(fileInput, "You must attach a proof document.");#}
+{#        } else {#}
+{#            setValid(fileInput);#}
+{#        }#}
+{##}
+{#        // STOP Submission if Invalid#}
+{#        if (!isValid) {#}
+{#            event.preventDefault();#}
+{#            event.stopPropagation();#}
+{##}
+{#            // Scroll to the first error#}
+{#            const firstError = document.querySelector('.is-invalid');#}
+{#            if (firstError) {#}
+{#                firstError.scrollIntoView({behavior: 'smooth', block: 'center'});#}
+{#            }#}
+{#        }#}
+{##}
+{#    });#}
+
+
+
+
+    // Form Validation Logic
+    document.getElementById('shopForm').addEventListener('submit', function (event) {
+        var isValid = true;
+
+        // Helper function to show error
+        function setInvalid(element, message) {
+            element.classList.add('is-invalid');
+            element.classList.remove('is-valid');
+
+            var feedback = element.parentElement.querySelector('.invalid-feedback');
+            if (!feedback) feedback = element.nextElementSibling;
+
+            if (feedback && feedback.classList.contains('invalid-feedback')) {
+                feedback.innerText = message;
+                feedback.style.display = 'block';
+            }
+            isValid = false;
+        }
+
+        // Helper function to clear error
+        function setValid(element) {
+            element.classList.remove('is-invalid');
+            element.classList.add('is-valid');
+
+            var feedback = element.parentElement.querySelector('.invalid-feedback');
+            if (!feedback) feedback = element.nextElementSibling;
+
+            if (feedback) feedback.style.display = 'none';
+        }
+
+        // 1. Generic Required Fields (Shop Name can have numbers)
+        var requiredIds = ['shopName', 'shopType', 'shopEq', 'shopMat', 'shopCity', 'shopProofType'];
+        requiredIds.forEach(function(id) {
+            var el = document.getElementById(id);
+            if (!el || !el.value.trim()) {
+                if (el) setInvalid(el, "This field is required.");
+            } else {
+                setValid(el);
+            }
+        });
+
+        // 2. Owner Name (Strictly Letters Only)
+        var ownerName = document.getElementById('ownerName');
+        var nameRegex = /^[A-Za-z\s]+$/;
+        if (!ownerName.value.trim()) {
+            setInvalid(ownerName, "Owner Name is required.");
+        } else if (!nameRegex.test(ownerName.value)) {
+            setInvalid(ownerName, "Owner Name can only contain letters.");
+        } else {
+            setValid(ownerName);
+        }
+
+        // 3. Email Validation (Must have @ and domain)
+        var shopEmail = document.getElementById('shopEmail');
+        var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!shopEmail.value.trim()) {
+            setInvalid(shopEmail, "Email is required.");
+        } else if (!emailRegex.test(shopEmail.value)) {
+            setInvalid(shopEmail, "Please enter a valid email address.");
+        } else {
+            setValid(shopEmail);
+        }
+
+        // 4. Phone Validation (Exactly 10 Digits)
+        var shopPhone = document.getElementById('shopPhone');
+        var phoneRegex = /^\d{10}$/;
+        if (!shopPhone.value.trim()) {
+            setInvalid(shopPhone, "Phone number is required.");
+        } else if (!phoneRegex.test(shopPhone.value)) {
+            setInvalid(shopPhone, "Phone number must be exactly 10 digits.");
+        } else {
+            setValid(shopPhone);
+        }
+
+        // 5. Username (No Spaces)
+        var user = document.getElementById('shopUsername');
+        if (!user.value.trim()) {
+            setInvalid(user, "Username is required.");
+        } else if (/\s/.test(user.value)) {
+            setInvalid(user, "Username cannot contain spaces.");
+        } else {
+            setValid(user);
+        }
+
+        // 6. Password (Strength & Username Check)
+        var pw = document.getElementById('shopPassword');
+        var pwRegex = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+        if (!pw.value) {
+             setInvalid(pw, "Password is required.");
+        } else if (!pwRegex.test(pw.value)) {
+            setInvalid(pw, "Must be 8+ chars & 1 special symbol (!@#$%^&*).");
+        } else if (user.value && pw.value.toLowerCase().includes(user.value.toLowerCase())) {
+            setInvalid(pw, "Password cannot contain your Username.");
+        } else {
+            setValid(pw);
+        }
+
+        // 7. File Attachment Check
+        var fileInput = document.getElementById('shopProofFile');
+        if (!fileInput.files || fileInput.files.length === 0) {
+            setInvalid(fileInput, "You must attach a proof document.");
+        } else {
+            setValid(fileInput);
+        }
+
+        // STOP Submission if Invalid
+        if (!isValid) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            var firstError = document.querySelector('.is-invalid');
+            if (firstError) {
+                firstError.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+        }
+    });
+
+
+
+
+</script>
+</body>
+</html>

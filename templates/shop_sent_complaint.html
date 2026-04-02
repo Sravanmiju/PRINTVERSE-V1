@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Contact Admin - Partner Console</title>
+
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+
+  <style>
+    body { background-color: #f8f9fa; }
+    .form-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        padding: 40px;
+        max-width: 700px;
+        margin: 60px auto;
+        border: 1px solid #e0e0e0;
+    }
+    .btn-brand { background-color: #f03c02; color: white; border: none; font-weight: 600; }
+    .btn-brand:hover { background-color: #d63500; color: white; }
+    .form-header { border-bottom: 2px solid #f0f0f0; margin-bottom: 30px; padding-bottom: 20px; text-align: center; }
+  </style>
+</head>
+
+<body>
+
+  <header id="header" class="header sticky-top bg-white shadow-sm">
+    <div class="branding d-flex align-items-center">
+      <div class="container position-relative d-flex align-items-center justify-content-between">
+        <a href="{% url 'home' %}" class="logo d-flex align-items-center">
+          <h1 class="sitename" style="color: #2b2320;">PrintVerse <span class="badge bg-dark ms-2 fs-6" style="letter-spacing: 1px;">PARTNER HUB</span></h1>
+        </a>
+        <nav id="navmenu" class="navmenu">
+          <ul>
+            <li><a href="{% url 'shop_home' %}">Back to Management Console</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="form-card">
+          <div class="form-header">
+              <h3 class="fw-bold text-dark">Contact Admin Support</h3>
+              <p class="text-muted small mb-0">Report payment issues, technical glitches, or account inquiries.</p>
+          </div>
+
+          <form method="POST" action="{% url 'submit_shop_complaint' %}">
+              {% csrf_token %}
+
+              <div class="mb-4">
+                  <label class="form-label fw-bold text-uppercase small text-secondary">Subject / Title</label>
+                  <input type="text" name="title" class="form-control" placeholder="e.g. Payment for Order #552 missing" required>
+              </div>
+
+              <div class="mb-4">
+                  <label class="form-label fw-bold text-uppercase small text-secondary">Issue Description</label>
+                  <textarea name="description" class="form-control" rows="6" placeholder="Please provide details about the issue..." required></textarea>
+              </div>
+
+              <div class="d-grid gap-2">
+                  <button type="submit" class="btn btn-brand py-2">Submit Ticket</button>
+                  <a href="{% url 'shop_home' %}" class="btn btn-light border text-muted">Cancel</a>
+              </div>
+          </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
